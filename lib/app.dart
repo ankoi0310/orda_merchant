@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orda_merchant/config/router/app_router.dart';
 import 'package:orda_merchant/config/theme/theme.dart';
-import 'package:orda_merchant/core/cubit/session_cubit.dart';
+import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/utils/app_util.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop_list/shop_list_bloc.dart';
 

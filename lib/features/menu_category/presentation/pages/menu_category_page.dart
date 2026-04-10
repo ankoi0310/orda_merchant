@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:orda_merchant/config/router/app_router.dart';
-import 'package:orda_merchant/core/cubit/session_cubit.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_bloc.dart';
+import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
 
 class MenuCategoryPage extends StatefulWidget {
   const MenuCategoryPage({super.key});

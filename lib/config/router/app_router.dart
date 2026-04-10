@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:orda_merchant/config/router/session_listenable.dart';
-import 'package:orda_merchant/core/cubit/session_cubit.dart';
+import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/ui/layout/main_layout.dart';
 import 'package:orda_merchant/di.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';

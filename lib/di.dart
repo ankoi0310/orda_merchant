@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:orda_merchant/core/cubit/session_cubit.dart';
+import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/service/shared_prefs_service.dart';
 import 'package:orda_merchant/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:orda_merchant/features/auth/data/repositories/auth_repository_impl.dart';
@@ -11,7 +11,8 @@ import 'package:orda_merchant/features/menu_category/data/repositories/menu_cate
 import 'package:orda_merchant/features/menu_category/domain/repositories/menu_category_repository.dart';
 import 'package:orda_merchant/features/menu_category/domain/usecases/create_menu_category_use_case.dart';
 import 'package:orda_merchant/features/menu_category/domain/usecases/get_menu_category_list_use_case.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category/menu_category_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
 import 'package:orda_merchant/features/shop/data/datasources/shop_remote_data_source.dart';
 import 'package:orda_merchant/features/shop/data/repositories/shop_repository_impl.dart';
 import 'package:orda_merchant/features/shop/domain/repositories/shop_repository.dart';
@@ -112,10 +113,10 @@ void _initMenuCategory(GetIt sl) {
     ..registerLazySingleton(
       () => CreateMenuCategoryUseCase(repository: sl()),
     )
+    ..registerLazySingleton(
+      () => MenuCategoryListBloc(getMenuCateogryList: sl()),
+    )
     ..registerFactory(
-      () => MenuCategoryBloc(
-        getMenuCateogryList: sl(),
-        createMenuCategory: sl(),
-      ),
+      () => MenuCategoryBloc(createMenuCategory: sl()),
     );
 }

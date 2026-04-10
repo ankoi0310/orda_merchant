@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:orda_merchant/core/cubit/session_cubit.dart';
+import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 
 class SessionListenable extends ChangeNotifier {
   SessionListenable(Stream<SessionState> stream) {
