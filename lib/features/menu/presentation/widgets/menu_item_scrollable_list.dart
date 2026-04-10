@@ -31,7 +31,10 @@ class MenuItemScrollableList extends StatelessWidget {
     };
 
     for (final item in items) {
-      itemsByCategory[item.category]?.add(item);
+      final category = categories.firstWhere(
+        (category) => category.id == item.categoryId,
+      );
+      itemsByCategory[category]?.add(item);
     }
 
     return Expanded(
@@ -78,6 +81,7 @@ class MenuItemScrollableList extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () => context.push(
                                 AppRouter.updateMenuItem(item.id),
+                                extra: item,
                               ),
                               child: const Icon(Iconsax.edit_copy),
                             ),

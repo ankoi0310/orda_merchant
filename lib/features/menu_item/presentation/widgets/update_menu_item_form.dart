@@ -5,29 +5,46 @@ import 'package:orda_merchant/core/extensions/string_extension.dart';
 import 'package:orda_merchant/core/ui/components/text_form_field.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/bottom_form_action.dart';
 import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
-import 'package:orda_merchant/features/menu_item/domain/usecases/create_menu_item_use_case.dart';
+import 'package:orda_merchant/features/menu_item/domain/entities/menu_item.dart';
+import 'package:orda_merchant/features/menu_item/domain/usecases/update_menu_item_use_case.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
 import 'package:orda_merchant/features/menu_item/presentation/widgets/category_dropdown_field.dart';
 import 'package:orda_merchant/features/menu_item/presentation/widgets/image_upload_field.dart';
 
-class AddMenuItemForm extends StatefulWidget {
-  const AddMenuItemForm({super.key});
+class UpdateMenuItemForm extends StatefulWidget {
+  const UpdateMenuItemForm({
+    required this.id,
+    required this.item,
+    super.key,
+  });
+
+  final String id;
+  final MenuItem item;
 
   @override
-  State<AddMenuItemForm> createState() => _AddMenuItemFormState();
+  State<UpdateMenuItemForm> createState() =>
+      _UpdateMenuItemFormState();
 }
 
-class _AddMenuItemFormState extends State<AddMenuItemForm> {
+class _UpdateMenuItemFormState extends State<UpdateMenuItemForm> {
   final formKey = GlobalKey<FormState>();
-  final nameTextControler = TextEditingController();
-  final descriptionTextController = TextEditingController();
-  final priceTextController = TextEditingController();
+  late final nameTextControler = TextEditingController(
+    text: widget.item.name,
+  );
+  late final descriptionTextController = TextEditingController(
+    text: widget.item.description,
+  );
+  late final priceTextController = TextEditingController(
+    text: '${widget.item.price}',
+  );
+
+  late final valueListenable = ValueNotifier<String?>(
+    widget.item.categoryId,
+  );
 
   final nameFocusNode = FocusNode();
   final descriptionFocusNode = FocusNode();
   final priceFocusNode = FocusNode();
-
-  final valueListenable = ValueNotifier<String?>(null);
 
   @override
   void initState() {
@@ -116,8 +133,9 @@ class _AddMenuItemFormState extends State<AddMenuItemForm> {
               if (formKey.currentState!.validate()) {
                 FocusScope.of(context).unfocus();
                 context.read<MenuItemBloc>().add(
-                  CreateMenuItem(
-                    CreateMenuItemParams(
+                  UpdateMenuItem(
+                    UpdateMenuItemParams(
+                      id: widget.id,
                       shopId: shopId,
                       categoryId: valueListenable.value,
                       name: nameTextControler.text.trim(),

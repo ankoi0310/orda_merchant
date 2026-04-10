@@ -17,9 +17,10 @@ import 'package:orda_merchant/features/menu_item/data/datasources/menu_item_remo
 import 'package:orda_merchant/features/menu_item/data/repositories/menu_item_repository_impl.dart';
 import 'package:orda_merchant/features/menu_item/domain/repositories/menu_item_repository.dart';
 import 'package:orda_merchant/features/menu_item/domain/usecases/create_menu_item_use_case.dart';
-import 'package:orda_merchant/features/menu_item/domain/usecases/get_menu_item_list_use_case.dart';
+import 'package:orda_merchant/features/menu_item/domain/usecases/update_menu_item_use_case.dart';
+import 'package:orda_merchant/features/menu_item/domain/usecases/watch_menu_items_use_case.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
-import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_bloc.dart';
+import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_cubit.dart';
 import 'package:orda_merchant/features/shop/data/datasources/shop_remote_data_source.dart';
 import 'package:orda_merchant/features/shop/data/repositories/shop_repository_impl.dart';
 import 'package:orda_merchant/features/shop/domain/repositories/shop_repository.dart';
@@ -138,13 +139,16 @@ void _initMenuItem(GetIt sl) {
       () => MenuItemRepositoryImpl(remoteDataSource: sl()),
     )
     ..registerLazySingleton(
-      () => GetMenuItemListUseCase(repository: sl()),
+      () => WatchMenuItemsUseCase(repository: sl()),
     )
     ..registerLazySingleton(
       () => CreateMenuItemUseCase(repository: sl()),
     )
     ..registerLazySingleton(
-      () => MenuItemListBloc(getMenuItemList: sl()),
+      () => UpdateMenuItemUseCase(repository: sl()),
     )
-    ..registerFactory(() => MenuItemBloc(createMenuItem: sl()));
+    ..registerFactory(() => MenuItemListCubit(watchMenuItems: sl()))
+    ..registerFactory(
+      () => MenuItemBloc(createMenuItem: sl(), updateMenuItem: sl()),
+    );
 }

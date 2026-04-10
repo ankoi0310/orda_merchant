@@ -13,8 +13,9 @@ import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_cate
 import 'package:orda_merchant/features/menu_category/presentation/pages/add_menu_category_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/edit_menu_category_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/menu_category_page.dart';
+import 'package:orda_merchant/features/menu_item/domain/entities/menu_item.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
-import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_bloc.dart';
+import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_cubit.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/add_menu_item_page.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/menu_item_page.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/update_menu_item_page.dart';
@@ -69,35 +70,42 @@ class AppRouter {
             builder: (context, state) => const ShopPage(),
           ),
           ShellRoute(
-            builder: (context, state, child) =>
-                BlocListener<SessionCubit, SessionState>(
-                  listenWhen: (prev, curr) =>
-                      prev.shopId != curr.shopId,
-                  listener: (context, state) {
-                    if (state.shopId != null) {
-                      print('STATE: $state');
-                    }
-                  },
-                  child: MultiBlocProvider(
-                    providers: [
-                      BlocProvider.value(
-                        value: sl<MenuCategoryListBloc>(),
-                      ),
-                      BlocProvider.value(
-                        value: sl<MenuItemListBloc>(),
-                      ),
-                    ],
-                    child: child,
-                  ),
-                ),
+            builder: (context, state, child) => MultiBlocProvider(
+              providers: [
+                BlocProvider.value(value: sl<MenuCategoryListBloc>()),
+              ],
+              child: child,
+            ),
             routes: [
               GoRoute(
                 path: menu,
-                builder: (context, state) => const MenuPage(),
+                builder: (context, state) {
+                  final shopId = context
+                      .read<SessionCubit>()
+                      .state
+                      .shopId;
+                  return BlocProvider(
+                    create: (context) =>
+                        sl<MenuItemListCubit>()
+                          ..startWatchingMenuItems(shopId!),
+                    child: const MenuPage(),
+                  );
+                },
                 routes: [
                   GoRoute(
                     path: item,
-                    builder: (context, state) => const MenuItemPage(),
+                    builder: (context, state) {
+                      final shopId = context
+                          .read<SessionCubit>()
+                          .state
+                          .shopId;
+                      return BlocProvider(
+                        create: (context) =>
+                            sl<MenuItemListCubit>()
+                              ..startWatchingMenuItems(shopId!),
+                        child: const MenuItemPage(),
+                      );
+                    },
                     routes: [
                       GoRoute(
                         path: 'add',
@@ -108,10 +116,17 @@ class AppRouter {
                       ),
                       GoRoute(
                         path: ':id/edit',
-                        builder: (context, state) => BlocProvider(
-                          create: (context) => sl<MenuItemBloc>(),
-                          child: const UpdateMenuItemPage(),
-                        ),
+                        builder: (context, state) {
+                          final id = state.pathParameters['id']!;
+                          final item = state.extra! as MenuItem;
+                          return BlocProvider(
+                            create: (context) => sl<MenuItemBloc>(),
+                            child: UpdateMenuItemPage(
+                              id: id,
+                              item: item,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

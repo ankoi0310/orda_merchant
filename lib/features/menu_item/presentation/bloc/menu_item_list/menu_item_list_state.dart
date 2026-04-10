@@ -1,4 +1,4 @@
-part of 'menu_item_list_bloc.dart';
+part of 'menu_item_list_cubit.dart';
 
 enum MenuItemStatus { initial, loading, loaded, error }
 
@@ -30,5 +30,5 @@ class MenuItemListState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [isLoading, items, error];
+  List<Object?> get props => [status, items, error];
 }

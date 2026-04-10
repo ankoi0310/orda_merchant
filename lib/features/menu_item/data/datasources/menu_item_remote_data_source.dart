@@ -1,14 +1,14 @@
 import 'package:orda_merchant/features/menu_item/data/models/menu_item_model.dart';
 import 'package:orda_merchant/features/menu_item/domain/usecases/create_menu_item_use_case.dart';
+import 'package:orda_merchant/features/menu_item/domain/usecases/update_menu_item_use_case.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class MenuItemRemoteDataSource {
-  Future<List<MenuItemModel>> getMenuItemList({
-    required String shopId,
-    String? categoryId,
-  });
+  Stream<List<MenuItemModel>> streamMenuItems(String shopId);
 
   Future<MenuItemModel> createMenuItem(CreateMenuItemParams params);
+
+  Future<MenuItemModel> updateMenuItem(UpdateMenuItemParams params);
 }
 
 class MenuItemRemoteDataSourceImpl
@@ -18,21 +18,16 @@ class MenuItemRemoteDataSourceImpl
   final SupabaseClient client;
 
   @override
-  Future<List<MenuItemModel>> getMenuItemList({
-    required String shopId,
-    String? categoryId,
-  }) async {
-    final menuItems = await client
+  Stream<List<MenuItemModel>> streamMenuItems(String shopId) {
+    return client
         .from('menu_items')
-        .select()
+        .stream(primaryKey: ['id'])
         .eq('shop_id', shopId)
-        .withConverter<List<MenuItemModel>>((jsonList) {
+        .map((jsonList) {
           return List.of(
             jsonList,
           ).map(MenuItemModel.fromJson).toList();
         });
-
-    return menuItems;
   }
 
   @override
@@ -42,7 +37,21 @@ class MenuItemRemoteDataSourceImpl
     final menuItem = await client
         .from('menu_items')
         .insert(params.toJson())
-        .select()
+        .select('*, category:menu_categories!inner(*)')
+        .single()
+        .withConverter<MenuItemModel>(MenuItemModel.fromJson);
+    return menuItem;
+  }
+
+  @override
+  Future<MenuItemModel> updateMenuItem(
+    UpdateMenuItemParams params,
+  ) async {
+    final menuItem = await client
+        .from('menu_items')
+        .update(params.toJson())
+        .eq('id', params.id)
+        .select('*, category:menu_categories!inner(*)')
         .single()
         .withConverter<MenuItemModel>(MenuItemModel.fromJson);
     return menuItem;

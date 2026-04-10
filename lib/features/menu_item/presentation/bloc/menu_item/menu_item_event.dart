@@ -15,3 +15,12 @@ final class CreateMenuItem extends MenuItemEvent {
   @override
   List<Object?> get props => [params];
 }
+
+final class UpdateMenuItem extends MenuItemEvent {
+  const UpdateMenuItem(this.params);
+
+  final UpdateMenuItemParams params;
+
+  @override
+  List<Object?> get props => [params];
+}

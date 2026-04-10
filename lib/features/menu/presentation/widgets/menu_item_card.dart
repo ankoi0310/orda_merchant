@@ -9,11 +9,10 @@ class MenuItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: IntrinsicHeight(
         child: Row(
-          spacing: 16,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -21,8 +20,10 @@ class MenuItemCard extends StatelessWidget {
                 item.imageUrl,
                 width: context.width * 0.2,
                 height: context.width * 0.2,
+                fit: BoxFit.cover,
               ),
             ),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

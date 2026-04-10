@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:orda_merchant/config/router/app_router.dart';
+import 'package:orda_merchant/features/menu/presentation/widgets/menu_item_card.dart';
+import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_cubit.dart';
 
-class MenuItemPage extends StatelessWidget {
+class MenuItemPage extends StatefulWidget {
   const MenuItemPage({super.key});
 
   @override
+  State<MenuItemPage> createState() => _MenuItemPageState();
+}
+
+class _MenuItemPageState extends State<MenuItemPage> {
+  @override
   Widget build(BuildContext context) {
+    final items = context.watch<MenuItemListCubit>().state.items;
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: context.pop),
@@ -15,16 +24,15 @@ class MenuItemPage extends StatelessWidget {
         title: const Text('Danh sách món'),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 16,
-                bottom: 8,
-              ),
-              child: Column(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+          child: Column(
+            spacing: 8,
+            children: [
+              Column(
                 spacing: 4,
                 children: [
                   Row(
@@ -55,9 +63,8 @@ class MenuItemPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            onPressed: () => context.push(
-                              '${AppRouter.menuItem}/add',
-                            ),
+                            onPressed: () =>
+                                context.push(AppRouter.addMenuItem),
                           ),
                         ),
                       ),
@@ -72,60 +79,63 @@ class MenuItemPage extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: ListView.separated(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      child: Row(
-                        spacing: 8,
-                        children: [
-                          Container(
-                            width: 64,
-                            height: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                            spacing: 4,
+              BlocConsumer<MenuItemListCubit, MenuItemListState>(
+                listener: (context, state) {
+                  // TODO: implement listener
+                },
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  if (state.isError) {
+                    return Expanded(
+                      child: Center(child: Text(state.error!)),
+                    );
+                  }
+
+                  return Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: ListView.separated(
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          final item = items[index];
+                          return Stack(
                             children: [
-                              Text(
-                                'Product Name $index',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              MenuItemCard(item: item),
+                              Positioned(
+                                bottom: 8,
+                                right: 0,
+                                child: GestureDetector(
+                                  onTap: () => context.push(
+                                    AppRouter.updateMenuItem(item.id),
+                                    extra: item,
+                                  ),
+                                  child: const Icon(
+                                    Iconsax.edit_copy,
+                                  ),
+                                ),
                               ),
-                              Text('Category $index'),
-                              Text('Status $index'),
                             ],
-                          ),
-                        ],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            color: Colors.grey[300],
+                            thickness: 1,
+                            height: 1,
+                            indent: 16,
+                            endIndent: 16,
+                          );
+                        },
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      color: Colors.grey[300],
-                      thickness: 1,
-                      height: 1,
-                      indent: 16,
-                      endIndent: 16,
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

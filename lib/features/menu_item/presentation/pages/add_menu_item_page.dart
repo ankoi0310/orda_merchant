@@ -6,15 +6,8 @@ import 'package:orda_merchant/core/utils/app_util.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
 import 'package:orda_merchant/features/menu_item/presentation/widgets/add_menu_item_form.dart';
 
-class AddMenuItemPage extends StatefulWidget {
+class AddMenuItemPage extends StatelessWidget {
   const AddMenuItemPage({super.key});
-
-  @override
-  State<AddMenuItemPage> createState() => _AddMenuItemPageState();
-}
-
-class _AddMenuItemPageState extends State<AddMenuItemPage> {
-  bool isActive = true;
 
   @override
   Widget build(BuildContext context) {
