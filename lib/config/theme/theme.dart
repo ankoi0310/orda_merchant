@@ -88,10 +88,10 @@ class MaterialTheme {
       titleSpacing: 0,
     ),
     inputDecorationTheme: InputDecorationTheme(
-      border: _border(color: colorScheme.onPrimaryContainer),
-      enabledBorder: _border(color: colorScheme.onPrimaryContainer),
+      border: _border(color: colorScheme.outlineVariant),
+      enabledBorder: _border(color: colorScheme.outlineVariant),
       focusedBorder: _border(
-        color: colorScheme.onPrimaryContainer,
+        color: colorScheme.outlineVariant,
         borderWidth: 2,
       ),
       errorBorder: _border(color: colorScheme.onErrorContainer),

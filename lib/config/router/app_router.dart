@@ -13,6 +13,8 @@ import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_cate
 import 'package:orda_merchant/features/menu_category/presentation/pages/add_menu_category_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/edit_menu_category_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/menu_category_page.dart';
+import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
+import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_bloc.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/add_menu_item_page.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/menu_item_page.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/update_menu_item_page.dart';
@@ -87,13 +89,18 @@ class AppRouter {
                   );
                 },
                 routes: [
-                  ShellRoute(
-                    builder: (context, state, child) => child,
+                  GoRoute(
+                    path: item,
+                    builder: (context, state) => BlocProvider(
+                      create: (context) => sl<MenuItemListBloc>(),
+                      child: const MenuItemPage(),
+                    ),
                     routes: [
-                      GoRoute(
-                        path: item,
-                        builder: (context, state) =>
-                            const MenuItemPage(),
+                      ShellRoute(
+                        builder: (_, _, child) => BlocProvider.value(
+                          value: sl<MenuItemBloc>(),
+                          child: child,
+                        ),
                         routes: [
                           GoRoute(
                             path: 'add',

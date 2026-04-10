@@ -1,4 +1,6 @@
 extension StringExtension on String {
+  bool get isInt => int.tryParse(this) != null;
+
   bool get isEmail => RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(this);
 
   bool get isPhone => RegExp(r'^[0-9]{9,15}$').hasMatch(this);

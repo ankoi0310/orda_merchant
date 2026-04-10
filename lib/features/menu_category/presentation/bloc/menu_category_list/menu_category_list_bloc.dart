@@ -10,8 +10,8 @@ part 'menu_category_list_state.dart';
 class MenuCategoryListBloc
     extends Bloc<MenuCategoryListEvent, MenuCategoryListState> {
   MenuCategoryListBloc({
-    required GetMenuCategoryListUseCase getMenuCateogryList,
-  }) : _getMenuCategoryList = getMenuCateogryList,
+    required GetMenuCategoryListUseCase getMenuCategoryList,
+  }) : _getMenuCategoryList = getMenuCategoryList,
        super(const MenuCategoryListState()) {
     on<EnsureCategoriesLoaded>((event, emit) async {
       if (state.isLoaded && state.categories.isNotEmpty) return;

@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
-class EditItemPage extends StatefulWidget {
-  const EditItemPage({super.key});
+class UpdateMenuItemPage extends StatefulWidget {
+  const UpdateMenuItemPage({super.key});
 
   @override
-  State<EditItemPage> createState() => _EditItemPageState();
+  State<UpdateMenuItemPage> createState() =>
+      _UpdateMenuItemPageState();
 }
 
-class _EditItemPageState extends State<EditItemPage> {
+class _UpdateMenuItemPageState extends State<UpdateMenuItemPage> {
   bool isActive = true;
 
   ValueNotifier<String> valueListenable = ValueNotifier('1');

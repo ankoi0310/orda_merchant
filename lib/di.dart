@@ -13,6 +13,13 @@ import 'package:orda_merchant/features/menu_category/domain/usecases/create_menu
 import 'package:orda_merchant/features/menu_category/domain/usecases/get_menu_category_list_use_case.dart';
 import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category/menu_category_bloc.dart';
 import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
+import 'package:orda_merchant/features/menu_item/data/datasources/menu_item_remote_data_source.dart';
+import 'package:orda_merchant/features/menu_item/data/repositories/menu_item_repository_impl.dart';
+import 'package:orda_merchant/features/menu_item/domain/repositories/menu_item_repository.dart';
+import 'package:orda_merchant/features/menu_item/domain/usecases/create_menu_item_use_case.dart';
+import 'package:orda_merchant/features/menu_item/domain/usecases/get_menu_item_list_use_case.dart';
+import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
+import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_bloc.dart';
 import 'package:orda_merchant/features/shop/data/datasources/shop_remote_data_source.dart';
 import 'package:orda_merchant/features/shop/data/repositories/shop_repository_impl.dart';
 import 'package:orda_merchant/features/shop/domain/repositories/shop_repository.dart';
@@ -50,6 +57,7 @@ Future<void> initInjection() async {
   _initUser(sl);
   _initShop(sl);
   _initMenuCategory(sl);
+  _initMenuItem(sl);
 }
 
 void _initAuth(GetIt sl) {
@@ -114,9 +122,29 @@ void _initMenuCategory(GetIt sl) {
       () => CreateMenuCategoryUseCase(repository: sl()),
     )
     ..registerLazySingleton(
-      () => MenuCategoryListBloc(getMenuCateogryList: sl()),
+      () => MenuCategoryListBloc(getMenuCategoryList: sl()),
     )
     ..registerFactory(
       () => MenuCategoryBloc(createMenuCategory: sl()),
     );
+}
+
+void _initMenuItem(GetIt sl) {
+  sl
+    ..registerLazySingleton<MenuItemRemoteDataSource>(
+      () => MenuItemRemoteDataSourceImpl(client: sl()),
+    )
+    ..registerLazySingleton<MenuItemRepository>(
+      () => MenuItemRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerLazySingleton(
+      () => GetMenuItemListUseCase(repository: sl()),
+    )
+    ..registerLazySingleton(
+      () => CreateMenuItemUseCase(repository: sl()),
+    )
+    ..registerLazySingleton(
+      () => MenuItemListBloc(getMenuItemList: sl()),
+    )
+    ..registerFactory(() => MenuItemBloc(createMenuItem: sl()));
 }

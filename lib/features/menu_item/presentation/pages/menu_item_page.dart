@@ -3,19 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:orda_merchant/config/router/app_router.dart';
 
-class ItemPage extends StatelessWidget {
-  const ItemPage({super.key});
+class MenuItemPage extends StatelessWidget {
+  const MenuItemPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: context.pop),
         titleSpacing: 0,
-        title: const Text('Products'),
-        // backgroundColor: Colors.transparent,
-        // elevation: 0,
-        // scrolledUnderElevation: 0,
-        // surfaceTintColor: Colors.transparent,
+        title: const Text('Danh sách món'),
       ),
       body: SafeArea(
         child: Column(
@@ -36,7 +33,7 @@ class ItemPage extends StatelessWidget {
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
-                            hintText: 'Search products',
+                            hintText: 'Tìm kiếm món',
                             prefixIcon: const Icon(
                               Iconsax.search_normal_copy,
                             ),
@@ -58,8 +55,9 @@ class ItemPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            onPressed: () =>
-                                context.push('${AppRouter.item}/add'),
+                            onPressed: () => context.push(
+                              '${AppRouter.menuItem}/add',
+                            ),
                           ),
                         ),
                       ),
