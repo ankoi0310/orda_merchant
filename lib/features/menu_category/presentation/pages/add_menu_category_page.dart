@@ -18,7 +18,7 @@ class AddMenuCategoryPage extends StatelessWidget {
           showSnackBar(context, content: state.message);
         }
 
-        if (state is CreateMenuCategorySuccess) {
+        if (state is MenuCategorySuccess) {
           showSnackBar(context, content: 'Thêm nhóm mới thành công');
           context.pop();
         }
@@ -35,7 +35,7 @@ class AddMenuCategoryPage extends StatelessWidget {
               ),
               body: const AddCategoryForm(),
             ),
-            if (state is CreatingMenuCategory)
+            if (state is MenuCategoryLoading)
               const LoadingWidget(text: 'Đang thêm nhóm..'),
           ],
         );

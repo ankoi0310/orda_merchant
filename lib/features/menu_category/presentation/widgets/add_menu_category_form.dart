@@ -55,7 +55,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
           BlocBuilder<MenuCategoryBloc, MenuCategoryState>(
             builder: (context, state) {
               return BottomFormAction(
-                isLoading: state is CreatingMenuCategory,
+                isLoading: state is MenuCategoryLoading,
                 onSubmmited: () {
                   if (formKey.currentState!.validate()) {
                     FocusScope.of(context).unfocus();

@@ -8,10 +8,10 @@ sealed class MenuCategoryState extends Equatable {
 
 final class MenuCategoryInitial extends MenuCategoryState {}
 
-final class CreatingMenuCategory extends MenuCategoryState {}
+final class MenuCategoryLoading extends MenuCategoryState {}
 
-final class CreateMenuCategorySuccess extends MenuCategoryState {
-  const CreateMenuCategorySuccess(this.category);
+final class MenuCategorySuccess extends MenuCategoryState {
+  const MenuCategorySuccess(this.category);
   final MenuCategory category;
 
   @override

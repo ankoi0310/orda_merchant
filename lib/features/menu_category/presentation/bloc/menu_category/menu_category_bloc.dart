@@ -13,6 +13,9 @@ class MenuCategoryBloc
     required CreateMenuCategoryUseCase createMenuCategory,
   }) : _createMenuCategory = createMenuCategory,
        super(MenuCategoryInitial()) {
+    on<MenuCategoryEvent>(
+      (state, emit) => emit(MenuCategoryLoading()),
+    );
     on<CreateMenuCategory>(_onCreateMenuCategory);
   }
 
@@ -31,7 +34,7 @@ class MenuCategoryBloc
 
     result.fold(
       (failure) => emit(MenuCategoryError(failure.message)),
-      (category) => emit(CreateMenuCategorySuccess(category)),
+      (category) => emit(MenuCategorySuccess(category)),
     );
   }
 }
