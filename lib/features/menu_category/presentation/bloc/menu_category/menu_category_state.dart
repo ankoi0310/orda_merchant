@@ -8,8 +8,6 @@ sealed class MenuCategoryState extends Equatable {
 
 final class MenuCategoryInitial extends MenuCategoryState {}
 
-final class MenuCategoryListFetching extends MenuCategoryState {}
-
 final class CreatingMenuCategory extends MenuCategoryState {}
 
 final class CreateMenuCategorySuccess extends MenuCategoryState {
