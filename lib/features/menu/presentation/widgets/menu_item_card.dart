@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:orda_merchant/config/gen/assets.gen.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/features/menu_item/domain/entities/menu_item.dart';
 
@@ -18,7 +17,8 @@ class MenuItemCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Assets.images.blankItem.image(
+              child: Image.network(
+                item.imageUrl,
                 width: context.width * 0.2,
                 height: context.width * 0.2,
               ),

@@ -68,51 +68,50 @@ class AppRouter {
             path: shop,
             builder: (context, state) => const ShopPage(),
           ),
-          GoRoute(
-            path: menu,
-            builder: (context, state) => const MenuPage(),
+          ShellRoute(
+            builder: (context, state, child) =>
+                BlocListener<SessionCubit, SessionState>(
+                  listenWhen: (prev, curr) =>
+                      prev.shopId != curr.shopId,
+                  listener: (context, state) {
+                    if (state.shopId != null) {
+                      print('STATE: $state');
+                    }
+                  },
+                  child: MultiBlocProvider(
+                    providers: [
+                      BlocProvider.value(
+                        value: sl<MenuCategoryListBloc>(),
+                      ),
+                      BlocProvider.value(
+                        value: sl<MenuItemListBloc>(),
+                      ),
+                    ],
+                    child: child,
+                  ),
+                ),
             routes: [
-              ShellRoute(
-                builder: (context, state, child) {
-                  return BlocListener<SessionCubit, SessionState>(
-                    listenWhen: (prev, curr) =>
-                        prev.shopId != curr.shopId,
-                    listener: (context, state) {
-                      if (state.shopId != null) {
-                        print('STATE: $state');
-                      }
-                    },
-                    child: BlocProvider.value(
-                      value: sl<MenuCategoryListBloc>(),
-                      child: child,
-                    ),
-                  );
-                },
+              GoRoute(
+                path: menu,
+                builder: (context, state) => const MenuPage(),
                 routes: [
                   GoRoute(
                     path: item,
-                    builder: (context, state) => BlocProvider(
-                      create: (context) => sl<MenuItemListBloc>(),
-                      child: const MenuItemPage(),
-                    ),
+                    builder: (context, state) => const MenuItemPage(),
                     routes: [
-                      ShellRoute(
-                        builder: (_, _, child) => BlocProvider.value(
-                          value: sl<MenuItemBloc>(),
-                          child: child,
+                      GoRoute(
+                        path: 'add',
+                        builder: (context, state) => BlocProvider(
+                          create: (context) => sl<MenuItemBloc>(),
+                          child: const AddMenuItemPage(),
                         ),
-                        routes: [
-                          GoRoute(
-                            path: 'add',
-                            builder: (context, state) =>
-                                const AddMenuItemPage(),
-                          ),
-                          GoRoute(
-                            path: ':id/edit',
-                            builder: (context, state) =>
-                                const UpdateMenuItemPage(),
-                          ),
-                        ],
+                      ),
+                      GoRoute(
+                        path: ':id/edit',
+                        builder: (context, state) => BlocProvider(
+                          create: (context) => sl<MenuItemBloc>(),
+                          child: const UpdateMenuItemPage(),
+                        ),
                       ),
                     ],
                   ),
@@ -120,25 +119,19 @@ class AppRouter {
                     path: category,
                     builder: (_, _) => const MenuCategoryPage(),
                     routes: [
-                      ShellRoute(
-                        builder: (context, state, child) =>
-                            BlocProvider(
-                              create: (context) =>
-                                  sl<MenuCategoryBloc>(),
-                              child: child,
-                            ),
-                        routes: [
-                          GoRoute(
-                            path: 'add',
-                            builder: (_, _) =>
-                                const AddMenuCategoryPage(),
-                          ),
-                          GoRoute(
-                            path: ':id/edit',
-                            builder: (_, _) =>
-                                const EditMenuCategoryPage(),
-                          ),
-                        ],
+                      GoRoute(
+                        path: 'add',
+                        builder: (_, _) => BlocProvider(
+                          create: (context) => sl<MenuCategoryBloc>(),
+                          child: const AddMenuCategoryPage(),
+                        ),
+                      ),
+                      GoRoute(
+                        path: ':id/edit',
+                        builder: (_, _) => BlocProvider(
+                          create: (context) => sl<MenuCategoryBloc>(),
+                          child: const EditMenuCategoryPage(),
+                        ),
                       ),
                     ],
                   ),

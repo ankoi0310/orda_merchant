@@ -1,20 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
+import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_actions_bottom_sheet.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_category_horizontal_list.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_item_scrollable_list.dart';
-import 'package:orda_merchant/features/menu_category/domain/entities/menu_category.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
+import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_bloc.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class MenuPage extends StatelessWidget {
+class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
+
+  @override
+  State<MenuPage> createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    final shopId = context.read<SessionCubit>().state.shopId;
+    if (shopId != null) {
+      context.read<MenuCategoryListBloc>().add(
+        EnsureCategoriesLoaded(shopId: shopId),
+      );
+      context.read<MenuItemListBloc>().add(
+        EnsureItemsLoaded(shopId: shopId),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final itemScrollController = ItemScrollController();
+    final categoryState = context.watch<MenuCategoryListBloc>().state;
+    final itemState = context.watch<MenuItemListBloc>().state;
 
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: context.pop),
         title: const Text('Thực đơn'),
         titleSpacing: 0,
         elevation: 0,
@@ -32,16 +60,24 @@ class MenuPage extends StatelessWidget {
             child: const Icon(Iconsax.menu_1_copy),
           ),
         ],
+        bottom: AppBar(
+          centerTitle: true,
+          title: MenuCategoryHorizontalList(
+            controller: itemScrollController,
+            categories: categoryState.categories,
+          ),
+          elevation: 4,
+          shadowColor: context.colors.shadow,
+        ),
       ),
-      body: SafeArea(
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 12),
         child: Column(
           children: [
-            MenuCategoryHorizontalList(
-              controller: itemScrollController,
-              categories: fakeCategories,
-            ),
             MenuItemScrollableList(
               itemScrollController: itemScrollController,
+              categories: categoryState.categories,
+              items: itemState.items,
             ),
           ],
         ),

@@ -5,15 +5,20 @@ import 'package:orda_merchant/config/router/app_router.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_item_card.dart';
 import 'package:orda_merchant/features/menu_category/domain/entities/menu_category.dart';
+import 'package:orda_merchant/features/menu_item/domain/entities/menu_item.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MenuItemScrollableList extends StatelessWidget {
   const MenuItemScrollableList({
     required this.itemScrollController,
+    required this.categories,
+    required this.items,
     super.key,
   });
 
   final ItemScrollController itemScrollController;
+  final List<MenuCategory> categories;
+  final List<MenuItem> items;
 
   @override
   Widget build(BuildContext context) {
@@ -21,58 +26,69 @@ class MenuItemScrollableList extends StatelessWidget {
     final itemPositionsListener = ItemPositionsListener.create();
     final scrollOffsetListener = ScrollOffsetListener.create();
 
+    final itemsByCategory = <MenuCategory, List<MenuItem>>{
+      for (final category in categories) category: [],
+    };
+
+    for (final item in items) {
+      itemsByCategory[item.category]?.add(item);
+    }
+
     return Expanded(
       child: ScrollablePositionedList.builder(
         itemScrollController: itemScrollController,
         scrollOffsetController: scrollOffsetController,
         itemPositionsListener: itemPositionsListener,
         scrollOffsetListener: scrollOffsetListener,
-        itemCount: fakeCategories.length,
+        itemCount: itemsByCategory.keys.length,
         itemBuilder: (context, index) {
-          final category = fakeCategories[index];
+          final category = itemsByCategory.keys.elementAt(index);
+          final items = itemsByCategory.values.elementAt(index);
           return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: context.colors.secondaryContainer,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text(
-                    category.name,
-                    style: context.textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                Text(
+                  category.name,
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                ScrollablePositionedList.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: category.items.length,
-                  itemBuilder: (context, index) {
-                    final item = category.items[index];
-                    return Stack(
-                      children: [
-                        MenuItemCard(item: item),
-                        Positioned(
-                          bottom: 8,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () => context.push(
-                              AppRouter.updateMenuItem(item.id),
+                if (items.isEmpty)
+                  const Center(
+                    child: Text('Chưa có món thuộc nhóm này'),
+                  )
+                else
+                  ScrollablePositionedList.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return Stack(
+                        children: [
+                          MenuItemCard(item: item),
+                          Positioned(
+                            bottom: 8,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () => context.push(
+                                AppRouter.updateMenuItem(item.id),
+                              ),
+                              child: const Icon(Iconsax.edit_copy),
                             ),
-                            child: const Icon(Iconsax.edit_copy),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const Divider(height: 1);
-                  },
-                ),
+                        ],
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return const Divider(height: 1);
+                    },
+                  ),
               ],
             ),
           );

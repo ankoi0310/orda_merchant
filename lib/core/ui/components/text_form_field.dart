@@ -40,6 +40,7 @@ class AppTextFormField extends StatelessWidget {
           onFieldSubmitted: onFieldSubmitted,
           selectAllOnFocus: true,
           enableInteractiveSelection: true,
+          textCapitalization: TextCapitalization.sentences,
           autovalidateMode: AutovalidateMode.onUserInteractionIfError,
           validator: validator,
         ),
