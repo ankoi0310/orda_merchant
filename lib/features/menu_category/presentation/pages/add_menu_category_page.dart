@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/core/ui/components/loading_widget.dart';
 import 'package:orda_merchant/core/utils/app_util.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category/menu_category_bloc.dart';
 import 'package:orda_merchant/features/menu_category/presentation/widgets/add_menu_category_form.dart';
 
 class AddMenuCategoryPage extends StatelessWidget {

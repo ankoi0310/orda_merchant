@@ -33,7 +33,7 @@ class MenuActionsBottomSheet extends StatelessWidget {
                   right: 0,
                   child: IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () => context.pop(),
+                    onPressed: context.pop,
                   ),
                 ),
               ],
@@ -50,6 +50,7 @@ class MenuActionsBottomSheet extends StatelessWidget {
                 final action = menuFloatingActions[index];
                 return ListTile(
                   onTap: () async {
+                    context.pop();
                     await context.push(action.route);
                   },
                   contentPadding: const EdgeInsets.symmetric(

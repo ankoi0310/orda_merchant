@@ -20,8 +20,8 @@ class _MenuCategoryPageState extends State<MenuCategoryPage> {
 
     final shopId = context.read<SessionCubit>().state.shopId;
     if (shopId != null) {
-      context.read<MenuCategoryBloc>().add(
-        GetMenuCategoryList(shopId: shopId),
+      context.read<MenuCategoryListBloc>().add(
+        EnsureCategoriesLoaded(shopId: shopId),
       );
     }
   }
@@ -30,6 +30,7 @@ class _MenuCategoryPageState extends State<MenuCategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: context.pop),
         title: const Text('Quản lý nhóm thực đơn'),
         actionsPadding: const EdgeInsets.only(right: 16),
         actions: [
@@ -39,27 +40,23 @@ class _MenuCategoryPageState extends State<MenuCategoryPage> {
           ),
         ],
       ),
-      body: BlocBuilder<MenuCategoryBloc, MenuCategoryState>(
+      body: BlocBuilder<MenuCategoryListBloc, MenuCategoryListState>(
         builder: (context, state) {
-          if (state is MenuCategoryListFetching) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state is MenuCategoryError) {
-            return Center(child: Text(state.message));
+          if (state.isError) {
+            return Center(child: Text(state.error!));
           }
 
-          if (state is MenuCategoryListFetched) {
-            return SingleChildScrollView(
-              child: Column(
-                children: state.categories.map((category) {
-                  return Text(category.name);
-                }).toList(),
-              ),
-            );
-          }
-
-          return const SizedBox();
+          return SingleChildScrollView(
+            child: Column(
+              children: state.categories.map((category) {
+                return Text(category.name);
+              }).toList(),
+            ),
+          );
         },
       ),
     );

@@ -10,15 +10,6 @@ final class MenuCategoryInitial extends MenuCategoryState {}
 
 final class MenuCategoryListFetching extends MenuCategoryState {}
 
-final class MenuCategoryListFetched extends MenuCategoryState {
-  const MenuCategoryListFetched(this.categories);
-
-  final List<MenuCategory> categories;
-
-  @override
-  List<Object> get props => [categories];
-}
-
 final class CreatingMenuCategory extends MenuCategoryState {}
 
 final class CreateMenuCategorySuccess extends MenuCategoryState {

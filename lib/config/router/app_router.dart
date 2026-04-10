@@ -8,13 +8,14 @@ import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:orda_merchant/features/auth/presentation/pages/login_page.dart';
 import 'package:orda_merchant/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:orda_merchant/features/menu/presentation/pages/menu_page.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category/menu_category_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/add_menu_category_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/edit_menu_category_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/menu_category_page.dart';
-import 'package:orda_merchant/features/menu_item/presentation/pages/add_item_page.dart';
-import 'package:orda_merchant/features/menu_item/presentation/pages/edit_item_page.dart';
-import 'package:orda_merchant/features/menu_item/presentation/pages/item_page.dart';
+import 'package:orda_merchant/features/menu_item/presentation/pages/add_menu_item_page.dart';
+import 'package:orda_merchant/features/menu_item/presentation/pages/menu_item_page.dart';
+import 'package:orda_merchant/features/menu_item/presentation/pages/update_menu_item_page.dart';
 import 'package:orda_merchant/features/order/presentation/pages/order_page.dart';
 import 'package:orda_merchant/features/shop/presentation/pages/shop_page.dart';
 import 'package:orda_merchant/features/user/presentation/pages/user_profile_page.dart';
@@ -79,7 +80,10 @@ class AppRouter {
                         print('STATE: $state');
                       }
                     },
-                    child: child,
+                    child: BlocProvider.value(
+                      value: sl<MenuCategoryListBloc>(),
+                      child: child,
+                    ),
                   );
                 },
                 routes: [
@@ -88,31 +92,34 @@ class AppRouter {
                     routes: [
                       GoRoute(
                         path: item,
-                        builder: (context, state) => const ItemPage(),
+                        builder: (context, state) =>
+                            const MenuItemPage(),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) =>
-                                const AddItemPage(),
+                                const AddMenuItemPage(),
                           ),
                           GoRoute(
                             path: ':id/edit',
                             builder: (context, state) =>
-                                const EditItemPage(),
+                                const UpdateMenuItemPage(),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  ShellRoute(
-                    builder: (context, state, child) => BlocProvider(
-                      create: (_) => sl<MenuCategoryBloc>(),
-                      child: child,
-                    ),
+                  GoRoute(
+                    path: category,
+                    builder: (_, _) => const MenuCategoryPage(),
                     routes: [
-                      GoRoute(
-                        path: category,
-                        builder: (_, _) => const MenuCategoryPage(),
+                      ShellRoute(
+                        builder: (context, state, child) =>
+                            BlocProvider(
+                              create: (context) =>
+                                  sl<MenuCategoryBloc>(),
+                              child: child,
+                            ),
                         routes: [
                           GoRoute(
                             path: 'add',
