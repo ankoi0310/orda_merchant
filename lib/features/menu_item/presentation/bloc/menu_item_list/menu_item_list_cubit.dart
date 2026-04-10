@@ -19,11 +19,10 @@ class MenuItemListCubit extends Cubit<MenuItemListState> {
   Future<void> startWatchingMenuItems(String shopId) async {
     emit(state.copyWith(status: MenuItemStatus.loading));
 
-    // await _menuItemSubscription?.cancel();
+    await _menuItemSubscription?.cancel();
 
     _menuItemSubscription = _watchMenuItems(shopId).listen(
       (items) {
-        print('Got new updated');
         emit(
           state.copyWith(status: MenuItemStatus.loaded, items: items),
         );
