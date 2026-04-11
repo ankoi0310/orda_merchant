@@ -2,7 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_cubit.dart';
 
 class CategoryDropdownField extends StatelessWidget {
   const CategoryDropdownField({
@@ -30,7 +30,7 @@ class CategoryDropdownField extends StatelessWidget {
             style: context.textTheme.bodyLarge,
           ),
         ),
-        BlocConsumer<MenuCategoryListBloc, MenuCategoryListState>(
+        BlocConsumer<MenuCategoryListCubit, MenuCategoryListState>(
           listener: (context, state) {
             if (state.isLoaded && valueListenable.value == null) {
               valueListenable.value = state.categories.first.id;

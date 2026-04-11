@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:orda_merchant/config/router/app_router.dart';
-import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_cubit.dart';
 
 class MenuCategoryPage extends StatefulWidget {
   const MenuCategoryPage({super.key});
@@ -14,18 +13,6 @@ class MenuCategoryPage extends StatefulWidget {
 }
 
 class _MenuCategoryPageState extends State<MenuCategoryPage> {
-  @override
-  void initState() {
-    super.initState();
-
-    final shopId = context.read<SessionCubit>().state.shopId;
-    if (shopId != null) {
-      context.read<MenuCategoryListBloc>().add(
-        EnsureCategoriesLoaded(shopId: shopId),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +27,7 @@ class _MenuCategoryPageState extends State<MenuCategoryPage> {
           ),
         ],
       ),
-      body: BlocBuilder<MenuCategoryListBloc, MenuCategoryListState>(
+      body: BlocBuilder<MenuCategoryListCubit, MenuCategoryListState>(
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());

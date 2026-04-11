@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_category_chip.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_cubit.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MenuCategoryHorizontalList extends StatelessWidget {
@@ -15,7 +15,7 @@ class MenuCategoryHorizontalList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories = context
-        .watch<MenuCategoryListBloc>()
+        .watch<MenuCategoryListCubit>()
         .state
         .categories;
     return SingleChildScrollView(

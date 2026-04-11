@@ -21,7 +21,6 @@ class UpdateMenuItemParams {
   const UpdateMenuItemParams({
     required this.id,
     required this.categoryId,
-    required this.shopId,
     required this.name,
     required this.description,
     required this.price,
@@ -30,7 +29,6 @@ class UpdateMenuItemParams {
 
   final String id;
   final String? categoryId;
-  final String? shopId;
   final String name;
   final String description;
   final int price;

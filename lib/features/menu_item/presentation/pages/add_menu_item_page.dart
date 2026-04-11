@@ -13,6 +13,7 @@ class AddMenuItemPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: context.pop),
         title: const Text('Thêm món mới'),
         centerTitle: true,
       ),

@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/core/extensions/string_extension.dart';
 import 'package:orda_merchant/core/ui/components/text_form_field.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/bottom_form_action.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
 import 'package:orda_merchant/features/menu_item/domain/entities/menu_item.dart';
 import 'package:orda_merchant/features/menu_item/domain/usecases/update_menu_item_use_case.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
@@ -53,18 +51,6 @@ class _UpdateMenuItemFormState extends State<UpdateMenuItemForm> {
   final priceFocusNode = FocusNode();
 
   @override
-  void initState() {
-    super.initState();
-
-    final shopId = context.read<SessionCubit>().state.shopId;
-    if (shopId != null) {
-      context.read<MenuCategoryListBloc>().add(
-        EnsureCategoriesLoaded(shopId: shopId),
-      );
-    }
-  }
-
-  @override
   void dispose() {
     nameTextControler.dispose();
     descriptionTextController.dispose();
@@ -77,8 +63,6 @@ class _UpdateMenuItemFormState extends State<UpdateMenuItemForm> {
 
   @override
   Widget build(BuildContext context) {
-    final shopId = context.read<SessionCubit>().state.shopId;
-
     return Scaffold(
       body: Form(
         key: formKey,
@@ -197,7 +181,6 @@ class _UpdateMenuItemFormState extends State<UpdateMenuItemForm> {
                   UpdateMenuItem(
                     UpdateMenuItemParams(
                       id: widget.id,
-                      shopId: shopId,
                       categoryId: valueListenable.value,
                       name: nameTextControler.text.trim(),
                       description: descriptionTextController.text

@@ -8,7 +8,6 @@ import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/core/extensions/string_extension.dart';
 import 'package:orda_merchant/core/ui/components/text_form_field.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/bottom_form_action.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
 import 'package:orda_merchant/features/menu_item/domain/usecases/create_menu_item_use_case.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
 import 'package:orda_merchant/features/menu_item/presentation/widgets/category_dropdown_field.dart';
@@ -34,18 +33,6 @@ class _AddMenuItemFormState extends State<AddMenuItemForm> {
   File? selectedImage;
 
   final valueListenable = ValueNotifier<String?>(null);
-
-  @override
-  void initState() {
-    super.initState();
-
-    final shopId = context.read<SessionCubit>().state.shopId;
-    if (shopId != null) {
-      context.read<MenuCategoryListBloc>().add(
-        EnsureCategoriesLoaded(shopId: shopId),
-      );
-    }
-  }
 
   @override
   void dispose() {

@@ -22,10 +22,7 @@ class CreateMenuCategoryUseCase
       );
     }
 
-    return repository.createMenuCategory(
-      shopId: params.shopId!,
-      name: params.name,
-    );
+    return repository.createMenuCategory(params);
   }
 }
 
@@ -34,4 +31,8 @@ class CreateMenuCategoryParams {
 
   final String? shopId;
   final String name;
+
+  JsonData toJson() {
+    return {'shop_id': shopId, 'name': name};
+  }
 }

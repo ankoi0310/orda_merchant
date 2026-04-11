@@ -21,6 +21,7 @@ class UpdateMenuItemPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: context.pop),
         title: const Text('Cập nhật món'),
         centerTitle: true,
       ),

@@ -6,7 +6,7 @@ import 'package:orda_merchant/config/router/app_router.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_item_card.dart';
 import 'package:orda_merchant/features/menu_category/domain/entities/menu_category.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_cubit.dart';
 import 'package:orda_merchant/features/menu_item/domain/entities/menu_item.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_cubit.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -23,7 +23,7 @@ class MenuItemScrollableList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories = context
-        .watch<MenuCategoryListBloc>()
+        .watch<MenuCategoryListCubit>()
         .state
         .categories;
     final items = context.watch<MenuItemListCubit>().state.items;

@@ -9,7 +9,7 @@ import 'package:orda_merchant/features/auth/presentation/pages/login_page.dart';
 import 'package:orda_merchant/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:orda_merchant/features/menu/presentation/pages/menu_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category/menu_category_bloc.dart';
-import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_cubit.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/add_menu_category_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/edit_menu_category_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/pages/menu_category_page.dart';
@@ -70,12 +70,18 @@ class AppRouter {
             builder: (context, state) => const ShopPage(),
           ),
           ShellRoute(
-            builder: (context, state, child) => MultiBlocProvider(
-              providers: [
-                BlocProvider.value(value: sl<MenuCategoryListBloc>()),
-              ],
-              child: child,
-            ),
+            builder: (context, state, child) {
+              final shopId = context
+                  .read<SessionCubit>()
+                  .state
+                  .shopId;
+              return BlocProvider(
+                create: (context) =>
+                    sl<MenuCategoryListCubit>()
+                      ..startWatchingMenuCategories(shopId!),
+                child: child,
+              );
+            },
             routes: [
               GoRoute(
                 path: menu,
@@ -107,26 +113,45 @@ class AppRouter {
                       );
                     },
                     routes: [
-                      GoRoute(
-                        path: 'add',
-                        builder: (context, state) => BlocProvider(
-                          create: (context) => sl<MenuItemBloc>(),
-                          child: const AddMenuItemPage(),
-                        ),
-                      ),
-                      GoRoute(
-                        path: ':id/edit',
-                        builder: (context, state) {
-                          final id = state.pathParameters['id']!;
-                          final item = state.extra! as MenuItem;
+                      ShellRoute(
+                        builder: (context, state, child) {
                           return BlocProvider(
-                            create: (context) => sl<MenuItemBloc>(),
-                            child: UpdateMenuItemPage(
-                              id: id,
-                              item: item,
-                            ),
+                            create: (context) {
+                              final shopId = context
+                                  .read<SessionCubit>()
+                                  .state
+                                  .shopId;
+                              return sl<MenuCategoryListCubit>()
+                                ..startWatchingMenuCategories(
+                                  shopId!,
+                                );
+                            },
                           );
                         },
+                        routes: [
+                          GoRoute(
+                            path: 'add',
+                            builder: (context, state) => BlocProvider(
+                              create: (context) => sl<MenuItemBloc>(),
+                              child: const AddMenuItemPage(),
+                            ),
+                          ),
+                          GoRoute(
+                            path: ':id/edit',
+                            builder: (context, state) {
+                              final id = state.pathParameters['id']!;
+                              final item = state.extra! as MenuItem;
+                              return BlocProvider(
+                                create: (context) =>
+                                    sl<MenuItemBloc>(),
+                                child: UpdateMenuItemPage(
+                                  id: id,
+                                  item: item,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
