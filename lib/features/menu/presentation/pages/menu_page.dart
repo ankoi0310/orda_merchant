@@ -8,7 +8,6 @@ import 'package:orda_merchant/features/menu/presentation/widgets/menu_actions_bo
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_category_horizontal_list.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_item_scrollable_list.dart';
 import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
-import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_cubit.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MenuPage extends StatefulWidget {
@@ -35,8 +34,6 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     final itemScrollController = ItemScrollController();
-    final categoryState = context.watch<MenuCategoryListBloc>().state;
-    final itemState = context.watch<MenuItemListCubit>().state;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +59,6 @@ class _MenuPageState extends State<MenuPage> {
           centerTitle: true,
           title: MenuCategoryHorizontalList(
             controller: itemScrollController,
-            categories: categoryState.categories,
           ),
           elevation: 4,
           shadowColor: context.colors.shadow,
@@ -72,8 +68,6 @@ class _MenuPageState extends State<MenuPage> {
         padding: const EdgeInsets.only(top: 8, bottom: 12),
         child: MenuItemScrollableList(
           itemScrollController: itemScrollController,
-          categories: categoryState.categories,
-          items: itemState.items,
         ),
       ),
     );

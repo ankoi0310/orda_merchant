@@ -6,24 +6,27 @@ import 'package:orda_merchant/config/router/app_router.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_item_card.dart';
 import 'package:orda_merchant/features/menu_category/domain/entities/menu_category.dart';
+import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category_list/menu_category_list_bloc.dart';
 import 'package:orda_merchant/features/menu_item/domain/entities/menu_item.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_cubit.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class MenuItemScrollableList extends StatelessWidget {
   const MenuItemScrollableList({
     required this.itemScrollController,
-    required this.categories,
-    required this.items,
     super.key,
   });
 
   final ItemScrollController itemScrollController;
-  final List<MenuCategory> categories;
-  final List<MenuItem> items;
 
   @override
   Widget build(BuildContext context) {
+    final categories = context
+        .watch<MenuCategoryListBloc>()
+        .state
+        .categories;
+    final items = context.watch<MenuItemListCubit>().state.items;
     final scrollOffsetController = ScrollOffsetController();
     final itemPositionsListener = ItemPositionsListener.create();
     final scrollOffsetListener = ScrollOffsetListener.create();
@@ -41,69 +44,77 @@ class MenuItemScrollableList extends StatelessWidget {
 
     return BlocBuilder<MenuItemListCubit, MenuItemListState>(
       builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        return Skeletonizer(
+          enabled: state.isLoading,
+          containersColor: context.colors.outlineVariant,
+          child: ScrollablePositionedList.builder(
+            itemScrollController: itemScrollController,
+            scrollOffsetController: scrollOffsetController,
+            itemPositionsListener: itemPositionsListener,
+            scrollOffsetListener: scrollOffsetListener,
+            itemCount: state.isLoading
+                ? 5
+                : itemsByCategory.keys.length,
+            itemBuilder: (context, index) {
+              final category = state.isLoading
+                  ? MenuCategory.test()
+                  : itemsByCategory.keys.elementAt(index);
+              final items = state.isLoading
+                  ? fakeMenuItems
+                  : itemsByCategory.values.elementAt(index);
 
-        return ScrollablePositionedList.builder(
-          itemScrollController: itemScrollController,
-          scrollOffsetController: scrollOffsetController,
-          itemPositionsListener: itemPositionsListener,
-          scrollOffsetListener: scrollOffsetListener,
-          itemCount: itemsByCategory.keys.length,
-          itemBuilder: (context, index) {
-            final category = itemsByCategory.keys.elementAt(index);
-            final items = itemsByCategory.values.elementAt(index);
-            return Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    category.name,
-                    style: context.textTheme.titleLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
+              return Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      category.name,
+                      style: context.textTheme.titleLarge,
                     ),
-                  ),
-                  if (items.isEmpty)
-                    const Center(
-                      child: Text('Chưa có món thuộc nhóm này'),
-                    )
-                  else
-                    ScrollablePositionedList.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        final item = items[index];
-                        return Stack(
-                          children: [
-                            MenuItemCard(item: item),
-                            Positioned(
-                              bottom: 8,
-                              right: 0,
-                              child: GestureDetector(
-                                onTap: () => context.push(
-                                  AppRouter.updateMenuItem(item.id),
-                                  extra: item,
+                    if (state.isLoaded && items.isEmpty)
+                      const Center(
+                        child: Text('Chưa có món thuộc nhóm này'),
+                      )
+                    else
+                      ScrollablePositionedList.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          final item = items[index];
+
+                          return Stack(
+                            children: [
+                              MenuItemCard(item: item),
+                              Positioned(
+                                bottom: 8,
+                                right: 0,
+                                child: GestureDetector(
+                                  onTap: () => context.push(
+                                    AppRouter.updateMenuItem(item.id),
+                                    extra: item,
+                                  ),
+                                  child: const Icon(
+                                    Iconsax.edit_copy,
+                                  ),
                                 ),
-                                child: const Icon(Iconsax.edit_copy),
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const Divider(height: 1);
-                      },
-                    ),
-                ],
-              ),
-            );
-          },
+                            ],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const Divider(height: 1);
+                        },
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
         );
       },
     );
