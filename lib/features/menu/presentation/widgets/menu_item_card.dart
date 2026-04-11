@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:orda_merchant/config/gen/assets.gen.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/features/menu_item/domain/entities/menu_item.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class MenuItemCard extends StatelessWidget {
   const MenuItemCard({required this.item, super.key});
@@ -16,34 +15,40 @@ class MenuItemCard extends StatelessWidget {
       child: IntrinsicHeight(
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: item.imageUrl.isEmpty
-                  ? Assets.images.blankItem.image(
-                      width: context.width * 0.2,
-                      height: context.width * 0.2,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.network(
-                      item.imageUrl,
-                      width: context.width * 0.2,
-                      height: context.width * 0.2,
-                      fit: BoxFit.cover,
-                      loadingBuilder:
-                          (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
+            SizedBox(
+              width: context.width * .2,
+              height: context.width * .2,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: item.imageUrl.isEmpty
+                    ? Assets.images.blankItem.image(fit: BoxFit.cover)
+                    : Image.network(
+                        item.imageUrl,
+                        fit: BoxFit.cover,
+                        loadingBuilder:
+                            (context, child, loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              }
 
-                            return Skeletonizer(
-                              containersColor:
-                                  context.colors.outlineVariant,
-                              child: Container(
-                                height: context.width * .2,
-                                width: context.width * .2,
-                                color: context.colors.outlineVariant,
-                              ),
-                            );
-                          },
-                    ),
+                              final progress =
+                                  loadingProgress
+                                          .expectedTotalBytes !=
+                                      null
+                                  ? loadingProgress
+                                            .cumulativeBytesLoaded /
+                                        loadingProgress
+                                            .expectedTotalBytes!
+                                  : null;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: progress,
+                                  color: context.colors.outline,
+                                ),
+                              );
+                            },
+                      ),
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(

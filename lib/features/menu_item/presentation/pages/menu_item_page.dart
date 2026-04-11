@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:orda_merchant/config/router/app_router.dart';
+import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/menu_item_card.dart';
+import 'package:orda_merchant/features/menu_item/domain/entities/menu_item.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_cubit.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class MenuItemPage extends StatefulWidget {
   const MenuItemPage({super.key});
@@ -24,16 +27,20 @@ class _MenuItemPageState extends State<MenuItemPage> {
         title: const Text('Danh sách món'),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
-          child: Column(
-            spacing: 8,
-            children: [
-              Column(
-                spacing: 4,
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: context.colors.surface,
+                border: Border(
+                  bottom: BorderSide(
+                    width: 2,
+                    color: context.colors.outlineVariant,
+                  ),
+                ),
+              ),
+              child: Column(
                 children: [
                   Row(
                     spacing: 8,
@@ -70,6 +77,7 @@ class _MenuItemPageState extends State<MenuItemPage> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 8),
                   const Row(
                     spacing: 8,
                     children: [
@@ -77,65 +85,68 @@ class _MenuItemPageState extends State<MenuItemPage> {
                       Chip(label: Text('Category')),
                     ],
                   ),
+                  const SizedBox(height: 8),
                 ],
               ),
-              Expanded(
-                child:
-                    BlocBuilder<MenuItemListCubit, MenuItemListState>(
-                      builder: (context, state) {
-                        if (state.isLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
+            ),
 
-                        if (state.isError) {
-                          return Center(child: Text(state.error!));
-                        }
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: ListView.separated(
-                            itemCount: items.length,
-                            itemBuilder: (context, index) {
-                              final item = items[index];
-                              return Stack(
-                                children: [
-                                  MenuItemCard(item: item),
-                                  Positioned(
-                                    bottom: 8,
-                                    right: 0,
-                                    child: GestureDetector(
-                                      onTap: () => context.push(
-                                        AppRouter.updateMenuItem(
-                                          item.id,
-                                        ),
-                                        extra: item,
-                                      ),
-                                      child: const Icon(
-                                        Iconsax.edit_copy,
-                                      ),
+            // Menu Item List
+            Expanded(
+              child:
+                  BlocBuilder<MenuItemListCubit, MenuItemListState>(
+                    builder: (context, state) {
+                      return Skeletonizer(
+                        enabled: state.isLoading,
+                        child: ListView.separated(
+                          itemCount: state.isLoading
+                              ? 10
+                              : items.length,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 16,
+                          ),
+                          itemBuilder: (context, index) {
+                            final item = state.isLoading
+                                ? MenuItem.test()
+                                : items[index];
+                            return Stack(
+                              children: [
+                                MenuItemCard(item: item),
+                                Positioned(
+                                  bottom: 8,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onTap: state.isLoading
+                                        ? null
+                                        : () => context.push(
+                                            AppRouter.updateMenuItem(
+                                              item.id,
+                                            ),
+                                            extra: item,
+                                          ),
+                                    child: const Icon(
+                                      Iconsax.edit_copy,
                                     ),
                                   ),
-                                ],
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return Divider(
-                                color: Colors.grey[300],
-                                thickness: 1,
-                                height: 1,
-                                indent: 16,
-                                endIndent: 16,
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-              ),
-            ],
-          ),
+                                ),
+                              ],
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return Divider(
+                              color: Colors.grey[300],
+                              thickness: 1,
+                              height: 1,
+                              indent: 16,
+                              endIndent: 16,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+            ),
+          ],
         ),
       ),
     );

@@ -46,7 +46,6 @@ class MenuItemScrollableList extends StatelessWidget {
       builder: (context, state) {
         return Skeletonizer(
           enabled: state.isLoading,
-          containersColor: context.colors.outlineVariant,
           child: ScrollablePositionedList.builder(
             itemScrollController: itemScrollController,
             scrollOffsetController: scrollOffsetController,
