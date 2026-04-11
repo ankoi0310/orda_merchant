@@ -70,14 +70,10 @@ class _MenuPageState extends State<MenuPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8, bottom: 12),
-        child: Column(
-          children: [
-            MenuItemScrollableList(
-              itemScrollController: itemScrollController,
-              categories: categoryState.categories,
-              items: itemState.items,
-            ),
-          ],
+        child: MenuItemScrollableList(
+          itemScrollController: itemScrollController,
+          categories: categoryState.categories,
+          items: itemState.items,
         ),
       ),
     );

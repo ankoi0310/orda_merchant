@@ -79,60 +79,60 @@ class _MenuItemPageState extends State<MenuItemPage> {
                   ),
                 ],
               ),
-              BlocConsumer<MenuItemListCubit, MenuItemListState>(
-                listener: (context, state) {
-                  // TODO: implement listener
-                },
-                builder: (context, state) {
-                  if (state.isLoading) {
-                    return const CircularProgressIndicator();
-                  }
-
-                  if (state.isError) {
-                    return Expanded(
-                      child: Center(child: Text(state.error!)),
-                    );
-                  }
-
-                  return Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: ListView.separated(
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          final item = items[index];
-                          return Stack(
-                            children: [
-                              MenuItemCard(item: item),
-                              Positioned(
-                                bottom: 8,
-                                right: 0,
-                                child: GestureDetector(
-                                  onTap: () => context.push(
-                                    AppRouter.updateMenuItem(item.id),
-                                    extra: item,
-                                  ),
-                                  child: const Icon(
-                                    Iconsax.edit_copy,
-                                  ),
-                                ),
-                              ),
-                            ],
+              Expanded(
+                child:
+                    BlocBuilder<MenuItemListCubit, MenuItemListState>(
+                      builder: (context, state) {
+                        if (state.isLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
                           );
-                        },
-                        separatorBuilder: (context, index) {
-                          return Divider(
-                            color: Colors.grey[300],
-                            thickness: 1,
-                            height: 1,
-                            indent: 16,
-                            endIndent: 16,
-                          );
-                        },
-                      ),
+                        }
+
+                        if (state.isError) {
+                          return Center(child: Text(state.error!));
+                        }
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: ListView.separated(
+                            itemCount: items.length,
+                            itemBuilder: (context, index) {
+                              final item = items[index];
+                              return Stack(
+                                children: [
+                                  MenuItemCard(item: item),
+                                  Positioned(
+                                    bottom: 8,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: () => context.push(
+                                        AppRouter.updateMenuItem(
+                                          item.id,
+                                        ),
+                                        extra: item,
+                                      ),
+                                      child: const Icon(
+                                        Iconsax.edit_copy,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return Divider(
+                                color: Colors.grey[300],
+                                thickness: 1,
+                                height: 1,
+                                indent: 16,
+                                endIndent: 16,
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
               ),
             ],
           ),
