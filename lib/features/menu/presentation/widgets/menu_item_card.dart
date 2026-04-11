@@ -26,7 +26,7 @@ class MenuItemCard extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 mainAxisAlignment: .spaceBetween,
                 children: [
                   Text(item.name, style: context.textTheme.bodyLarge),

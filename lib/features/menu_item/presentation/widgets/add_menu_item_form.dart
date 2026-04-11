@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
+import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/core/extensions/string_extension.dart';
 import 'package:orda_merchant/core/ui/components/text_form_field.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/bottom_form_action.dart';
@@ -26,6 +30,8 @@ class _AddMenuItemFormState extends State<AddMenuItemForm> {
   final nameFocusNode = FocusNode();
   final descriptionFocusNode = FocusNode();
   final priceFocusNode = FocusNode();
+
+  File? selectedImage;
 
   final valueListenable = ValueNotifier<String?>(null);
 
@@ -65,7 +71,56 @@ class _AddMenuItemFormState extends State<AddMenuItemForm> {
             child: Column(
               spacing: 16,
               children: [
-                const ImageUploadField(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 8,
+                  children: [
+                    ImageUploadField(
+                      selectedImage: selectedImage,
+                      onImageSelected: (image) {
+                        setState(() {
+                          selectedImage = image;
+                        });
+                      },
+                    ),
+                    if (selectedImage != null)
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(
+                              selectedImage!,
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Positioned(
+                            top: 4,
+                            right: 4,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedImage = null;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: context.colors.onSurface,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Iconsax.close_circle,
+                                  color: context.colors.surface,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
                 CategoryDropdownField(
                   valueListenable: valueListenable,
                 ),
@@ -79,6 +134,7 @@ class _AddMenuItemFormState extends State<AddMenuItemForm> {
                   },
                 ),
                 AppTextFormField(
+                  isRequired: false,
                   title: 'Mô tả món',
                   controller: descriptionTextController,
                   focusNode: descriptionFocusNode,
@@ -126,6 +182,7 @@ class _AddMenuItemFormState extends State<AddMenuItemForm> {
                       price: int.parse(
                         priceTextController.text.trim(),
                       ),
+                      file: selectedImage,
                     ),
                   ),
                 );

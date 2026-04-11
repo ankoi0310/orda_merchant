@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mime/mime.dart';
 
 TextTheme createTextTheme(
   BuildContext context,
@@ -48,4 +49,9 @@ void showSnackBar(BuildContext context, {required String content}) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(content: Text(content)));
+}
+
+bool isImageFile(String path) {
+  final mimeType = lookupMimeType(path);
+  return mimeType != null && mimeType.startsWith('image/');
 }

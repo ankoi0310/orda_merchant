@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/service/shared_prefs_service.dart';
+import 'package:orda_merchant/core/service/supabase_storage_service.dart';
 import 'package:orda_merchant/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:orda_merchant/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:orda_merchant/features/auth/domain/repositories/auth_repository.dart';
@@ -44,6 +45,9 @@ Future<void> initInjection() async {
 
   sl
     ..registerLazySingleton(() => Supabase.instance.client)
+    ..registerLazySingleton<SupabaseStorageService>(
+      () => SupabaseStorageServiceImpl(client: sl()),
+    )
     ..registerLazySingleton<SharedPrefsService>(
       () => SharedPrefsServiceImpl(prefs),
     )
@@ -133,7 +137,10 @@ void _initMenuCategory(GetIt sl) {
 void _initMenuItem(GetIt sl) {
   sl
     ..registerLazySingleton<MenuItemRemoteDataSource>(
-      () => MenuItemRemoteDataSourceImpl(client: sl()),
+      () => MenuItemRemoteDataSourceImpl(
+        client: sl(),
+        storageService: sl(),
+      ),
     )
     ..registerLazySingleton<MenuItemRepository>(
       () => MenuItemRepositoryImpl(remoteDataSource: sl()),

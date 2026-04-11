@@ -45,69 +45,65 @@ class MenuItemScrollableList extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return Expanded(
-          child: ScrollablePositionedList.builder(
-            itemScrollController: itemScrollController,
-            scrollOffsetController: scrollOffsetController,
-            itemPositionsListener: itemPositionsListener,
-            scrollOffsetListener: scrollOffsetListener,
-            itemCount: itemsByCategory.keys.length,
-            itemBuilder: (context, index) {
-              final category = itemsByCategory.keys.elementAt(index);
-              final items = itemsByCategory.values.elementAt(index);
-              return Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      category.name,
-                      style: context.textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+        return ScrollablePositionedList.builder(
+          itemScrollController: itemScrollController,
+          scrollOffsetController: scrollOffsetController,
+          itemPositionsListener: itemPositionsListener,
+          scrollOffsetListener: scrollOffsetListener,
+          itemCount: itemsByCategory.keys.length,
+          itemBuilder: (context, index) {
+            final category = itemsByCategory.keys.elementAt(index);
+            final items = itemsByCategory.values.elementAt(index);
+            return Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    category.name,
+                    style: context.textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    if (items.isEmpty)
-                      const Center(
-                        child: Text('Chưa có món thuộc nhóm này'),
-                      )
-                    else
-                      ScrollablePositionedList.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          final item = items[index];
-                          return Stack(
-                            children: [
-                              MenuItemCard(item: item),
-                              Positioned(
-                                bottom: 8,
-                                right: 0,
-                                child: GestureDetector(
-                                  onTap: () => context.push(
-                                    AppRouter.updateMenuItem(item.id),
-                                    extra: item,
-                                  ),
-                                  child: const Icon(
-                                    Iconsax.edit_copy,
-                                  ),
+                  ),
+                  if (items.isEmpty)
+                    const Center(
+                      child: Text('Chưa có món thuộc nhóm này'),
+                    )
+                  else
+                    ScrollablePositionedList.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        final item = items[index];
+                        return Stack(
+                          children: [
+                            MenuItemCard(item: item),
+                            Positioned(
+                              bottom: 8,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: () => context.push(
+                                  AppRouter.updateMenuItem(item.id),
+                                  extra: item,
                                 ),
+                                child: const Icon(Iconsax.edit_copy),
                               ),
-                            ],
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Divider(height: 1);
-                        },
-                      ),
-                  ],
-                ),
-              );
-            },
-          ),
+                            ),
+                          ],
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const Divider(height: 1);
+                      },
+                    ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

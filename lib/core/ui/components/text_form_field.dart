@@ -7,6 +7,7 @@ class AppTextFormField extends StatelessWidget {
     required this.title,
     required this.controller,
     required this.focusNode,
+    this.isRequired = true,
     this.enabled = true,
     this.maxLines = 1,
     this.hintText,
@@ -16,6 +17,7 @@ class AppTextFormField extends StatelessWidget {
   });
 
   final String title;
+  final bool isRequired;
   final bool enabled;
   final TextEditingController controller;
   final FocusNode focusNode;
@@ -30,7 +32,19 @@ class AppTextFormField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
-        Text(title, style: context.textTheme.bodyLarge),
+        Text.rich(
+          TextSpan(
+            text: title,
+            children: [
+              if (isRequired)
+                TextSpan(
+                  text: '*',
+                  style: TextStyle(color: context.colors.error),
+                ),
+            ],
+            style: context.textTheme.bodyLarge,
+          ),
+        ),
         TextFormField(
           enabled: enabled,
           controller: controller,

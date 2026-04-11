@@ -18,7 +18,18 @@ class CategoryDropdownField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
-        Text('Phân loại', style: context.textTheme.bodyLarge),
+        Text.rich(
+          TextSpan(
+            text: 'Phân loại',
+            children: [
+              TextSpan(
+                text: '*',
+                style: TextStyle(color: context.colors.error),
+              ),
+            ],
+            style: context.textTheme.bodyLarge,
+          ),
+        ),
         BlocConsumer<MenuCategoryListBloc, MenuCategoryListState>(
           listener: (context, state) {
             if (state.isLoaded && valueListenable.value == null) {
