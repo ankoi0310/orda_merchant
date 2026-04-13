@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
+import 'package:orda_merchant/features/order/presentation/widgets/order_history_tab.dart';
 import 'package:orda_merchant/features/order/presentation/widgets/upcoming_orders_tab.dart';
 
 class OrderPage extends StatefulWidget {
@@ -21,7 +22,6 @@ class _OrderPageState extends State<OrderPage>
 
   @override
   Widget build(BuildContext context) {
-    const length = 20;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quản lý đơn hàng'),
@@ -46,49 +46,7 @@ class _OrderPageState extends State<OrderPage>
       body: SafeArea(
         child: TabBarView(
           controller: _tabController,
-          children: [
-            const UpcomingOrdersTab(),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      await showModalBottomSheet<void>(
-                        context: context,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadiusGeometry.directional(
-                                topStart: Radius.circular(16),
-                                topEnd: Radius.circular(16),
-                              ),
-                        ),
-                        builder: (context) {
-                          return SafeArea(
-                            child: Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(16),
-                              child: Text('order detail'),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        top: 16,
-                        bottom: index == length - 1 ? 16 : 0,
-                      ),
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(color: Colors.red),
-                      child: Text('Order $index'),
-                    ),
-                  );
-                },
-                itemCount: length,
-              ),
-            ),
-          ],
+          children: const [UpcomingOrdersTab(), OrderHistoryTab()],
         ),
       ),
     );

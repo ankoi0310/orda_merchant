@@ -10,6 +10,7 @@ class OrderModel extends Order {
     required super.note,
     required super.totalPrice,
     required super.status,
+    required super.createdAt,
     required super.items,
   });
 
@@ -21,6 +22,7 @@ class OrderModel extends Order {
       note: json['note'] as String,
       totalPrice: json['total_price'] as int,
       status: _parseStatus(json['status'] as String),
+      createdAt: DateTime.parse(json['created_at'] as String),
       items: List<JsonData>.from(
         json['order_items'] as List,
       ).map(OrderItemModel.fromJson).toList(),

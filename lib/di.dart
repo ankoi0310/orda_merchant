@@ -25,7 +25,9 @@ import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_lis
 import 'package:orda_merchant/features/order/data/datasources/order_remote_data_source.dart';
 import 'package:orda_merchant/features/order/data/repositories/order_repository_impl.dart';
 import 'package:orda_merchant/features/order/domain/repositories/order_repository.dart';
+import 'package:orda_merchant/features/order/domain/usecases/get_order_history_use_case.dart';
 import 'package:orda_merchant/features/order/domain/usecases/watch_upcoming_orders_use_case.dart';
+import 'package:orda_merchant/features/order/presentation/bloc/history_orders/history_orders_cubit.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/upcoming_orders/upcoming_orders_cubit.dart';
 import 'package:orda_merchant/features/shop/data/datasources/shop_remote_data_source.dart';
 import 'package:orda_merchant/features/shop/data/repositories/shop_repository_impl.dart';
@@ -177,7 +179,13 @@ void _initOrder(GetIt sl) {
     ..registerLazySingleton(
       () => WatchUpcomingOrdersUseCase(repository: sl()),
     )
+    ..registerLazySingleton(
+      () => GetOrderHistoryUseCase(repository: sl()),
+    )
     ..registerFactory(
       () => UpcomingOrdersCubit(watchUpcomingOrders: sl()),
+    )
+    ..registerFactory(
+      () => HistoryOrdersCubit(getOrderHistory: sl()),
     );
 }
