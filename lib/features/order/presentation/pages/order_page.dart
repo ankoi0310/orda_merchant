@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:orda_merchant/core/extensions/build_context_extension.dart';
+import 'package:orda_merchant/features/order/presentation/widgets/upcoming_orders_tab.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -22,109 +24,72 @@ class _OrderPageState extends State<OrderPage>
     const length = 20;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Order'),
+        title: const Text('Quản lý đơn hàng'),
         centerTitle: true,
         titleSpacing: 0,
         bottom: TabBar(
           controller: _tabController,
-          // indicator: BoxDecoration(
-          //   borderRadius: BorderRadius.circular(20),
-          //   color: Colors.black,
-          // ),
+          indicatorSize: TabBarIndicatorSize.tab,
           // labelColor: Colors.white,
           // unselectedLabelColor: Colors.black,
+          splashFactory: NoSplash.splashFactory,
+          labelStyle: context.textTheme.bodyLarge,
+          unselectedLabelStyle: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
           tabs: const [
-            Tab(text: 'Current'),
-            Tab(text: 'Finished'),
+            Tab(text: 'Hiện tại'),
+            Tab(text: 'Lịch sử'),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () async {
-                    await showModalBottomSheet<void>(
-                      context: context,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadiusGeometry.directional(
-                              topStart: Radius.circular(16),
-                              topEnd: Radius.circular(16),
+      body: SafeArea(
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            const UpcomingOrdersTab(),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () async {
+                      await showModalBottomSheet<void>(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadiusGeometry.directional(
+                                topStart: Radius.circular(16),
+                                topEnd: Radius.circular(16),
+                              ),
+                        ),
+                        builder: (context) {
+                          return SafeArea(
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(16),
+                              child: Text('order detail'),
                             ),
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        top: 16,
+                        bottom: index == length - 1 ? 16 : 0,
                       ),
-                      builder: (context) {
-                        return SafeArea(
-                          top: false,
-                          maintainBottomViewPadding: true,
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(16),
-                            child: Text('order detail'),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      top: 16,
-                      bottom: index == length - 1 ? 16 : 0,
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(color: Colors.red),
+                      child: Text('Order $index'),
                     ),
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(color: Colors.red),
-                    child: Text('Order $index'),
-                  ),
-                );
-              },
-              itemCount: length,
+                  );
+                },
+                itemCount: length,
+              ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () async {
-                    await showModalBottomSheet<void>(
-                      context: context,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadiusGeometry.directional(
-                              topStart: Radius.circular(16),
-                              topEnd: Radius.circular(16),
-                            ),
-                      ),
-                      builder: (context) {
-                        return SafeArea(
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(16),
-                            child: Text('order detail'),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      top: 16,
-                      bottom: index == length - 1 ? 16 : 0,
-                    ),
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(color: Colors.red),
-                    child: Text('Order $index'),
-                  ),
-                );
-              },
-              itemCount: length,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

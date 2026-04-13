@@ -2,6 +2,6 @@ import 'package:orda_merchant/core/utils/typedefs.dart';
 import 'package:orda_merchant/features/order/domain/entities/order.dart';
 
 abstract class OrderRepository {
-  ResultFuture<List<Order>> fetchOrders();
-  ResultFuture<bool> createOrder();
+  Stream<List<Order>> watchUpcomingOrders(String shopId);
+  ResultFuture<List<Order>> fetchOrders(String shopId);
 }

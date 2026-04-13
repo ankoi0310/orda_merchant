@@ -22,6 +22,11 @@ import 'package:orda_merchant/features/menu_item/domain/usecases/update_menu_ite
 import 'package:orda_merchant/features/menu_item/domain/usecases/watch_menu_items_use_case.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_cubit.dart';
+import 'package:orda_merchant/features/order/data/datasources/order_remote_data_source.dart';
+import 'package:orda_merchant/features/order/data/repositories/order_repository_impl.dart';
+import 'package:orda_merchant/features/order/domain/repositories/order_repository.dart';
+import 'package:orda_merchant/features/order/domain/usecases/watch_upcoming_orders_use_case.dart';
+import 'package:orda_merchant/features/order/presentation/bloc/upcoming_orders/upcoming_orders_cubit.dart';
 import 'package:orda_merchant/features/shop/data/datasources/shop_remote_data_source.dart';
 import 'package:orda_merchant/features/shop/data/repositories/shop_repository_impl.dart';
 import 'package:orda_merchant/features/shop/domain/repositories/shop_repository.dart';
@@ -63,6 +68,7 @@ Future<void> initInjection() async {
   _initShop(sl);
   _initMenuCategory(sl);
   _initMenuItem(sl);
+  _initOrder(sl);
 }
 
 void _initAuth(GetIt sl) {
@@ -157,5 +163,21 @@ void _initMenuItem(GetIt sl) {
     ..registerFactory(() => MenuItemListCubit(watchMenuItems: sl()))
     ..registerFactory(
       () => MenuItemBloc(createMenuItem: sl(), updateMenuItem: sl()),
+    );
+}
+
+void _initOrder(GetIt sl) {
+  sl
+    ..registerLazySingleton<OrderRemoteDataSource>(
+      () => OrderRemoteDataSourceImpl(client: sl()),
+    )
+    ..registerLazySingleton<OrderRepository>(
+      () => OrderRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerLazySingleton(
+      () => WatchUpcomingOrdersUseCase(repository: sl()),
+    )
+    ..registerFactory(
+      () => UpcomingOrdersCubit(watchUpcomingOrders: sl()),
     );
 }
