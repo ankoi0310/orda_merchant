@@ -16,13 +16,13 @@ class OrderDetailModal extends StatelessWidget {
       child: Column(
         crossAxisAlignment: .stretch,
         spacing: 16,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           const SizedBox(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const .symmetric(horizontal: 16),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 Row(
                   mainAxisAlignment: .spaceBetween,
@@ -35,7 +35,7 @@ class OrderDetailModal extends StatelessWidget {
                       '${order.totalPrice.toVND()} (${order.totalItems} món)',
                       style: context.textTheme.titleMedium!.copyWith(
                         color: context.colors.primary,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ],
@@ -104,8 +104,7 @@ class OrderDetailModal extends StatelessWidget {
                     Text(
                       order.createdAt.fullTimeDate,
                       style: context.textTheme.bodyMedium!.copyWith(
-                        color: context.colors.primary,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ],
@@ -117,7 +116,18 @@ class OrderDetailModal extends StatelessWidget {
                     Text(
                       'Tiền mặt',
                       style: context.textTheme.bodyMedium!.copyWith(
-                        color: context.colors.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: .spaceBetween,
+                  children: [
+                    const Text('Trạng thái'),
+                    Text(
+                      order.status.label,
+                      style: context.textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -29,7 +29,30 @@ class OrderRepositoryImpl implements OrderRepository {
       );
     } catch (e) {
       return Left(
-        ServerFailure('Xảy ra lỗi khi lấy lịch sử đơn hàng: $e')
+        ServerFailure('Xảy ra lỗi khi lấy lịch sử đơn hàng: $e'),
+      );
+    }
+  }
+
+  @override
+  ResultFuture<Order> updateOrderStatus({
+    required String orderId,
+    required String status,
+  }) async {
+    try {
+      final updatedOrder = await remoteDataSource.updateOrderStatus(orderId: orderId, status: status);
+      return Right(updatedOrder);
+    } on ServerException catch (e) {
+      return Left(
+        ServerFailure(
+          'Cập nhật trạng thái đơn hàng không thành công: ${e.message}',
+        ),
+      );
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          'Xảy ra lỗi khi cập nhật trạng thái đơn hàng: $e',
+        ),
       );
     }
   }

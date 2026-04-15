@@ -1,5 +1,7 @@
-import 'package:bloc/bloc.dart';
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orda_merchant/features/order/domain/entities/order.dart';
 import 'package:orda_merchant/features/order/domain/usecases/get_order_history_use_case.dart';
 
@@ -40,6 +42,12 @@ class HistoryOrdersCubit extends Cubit<HistoryOrdersState> {
         ),
       ),
     );
+  }
+
+  void cacheUpdatedOrder(Order order) {
+    print('update order');
+    final orders = [order, ...state.orders];
+    emit(state.copyWith(orders: orders));
   }
 
   Future<void> refresh(String shopId) async {

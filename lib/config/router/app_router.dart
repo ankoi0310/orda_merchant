@@ -63,7 +63,9 @@ class AppRouter {
           ),
           GoRoute(
             path: order,
-            builder: (context, state) => const OrderPage(),
+            builder: (context, state) {
+              return const OrderPage();
+            },
           ),
           GoRoute(
             path: shop,

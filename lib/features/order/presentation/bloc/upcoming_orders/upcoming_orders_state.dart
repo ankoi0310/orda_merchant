@@ -1,6 +1,12 @@
 part of 'upcoming_orders_cubit.dart';
 
-enum UpcomingOrdersStatus { initial, loading, success, error }
+enum UpcomingOrdersStatus {
+  initial,
+  loading,
+  updating,
+  success,
+  error,
+}
 
 final class UpcomingOrdersState extends Equatable {
   const UpcomingOrdersState({
@@ -26,6 +32,8 @@ final class UpcomingOrdersState extends Equatable {
   }
 
   bool get isLoading => status == UpcomingOrdersStatus.loading;
+
+  bool get isUpdating => status == UpcomingOrdersStatus.updating;
 
   bool get isSuccess => status == UpcomingOrdersStatus.success;
 

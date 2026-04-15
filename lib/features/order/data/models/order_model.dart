@@ -23,9 +23,11 @@ class OrderModel extends Order {
       totalPrice: json['total_price'] as int,
       status: _parseStatus(json['status'] as String),
       createdAt: DateTime.parse(json['created_at'] as String),
-      items: List<JsonData>.from(
-        json['order_items'] as List,
-      ).map(OrderItemModel.fromJson).toList(),
+      items: json['order_items'] == null
+          ? []
+          : List<JsonData>.from(
+              json['order_items'] as List,
+            ).map(OrderItemModel.fromJson).toList(),
     );
   }
 

@@ -180,10 +180,17 @@ void _initOrder(GetIt sl) {
       () => WatchUpcomingOrdersUseCase(repository: sl()),
     )
     ..registerLazySingleton(
+      () => ConfirmOrderCompleteUseCase(repository: sl()),
+    )
+    ..registerLazySingleton(
       () => GetOrderHistoryUseCase(repository: sl()),
     )
     ..registerFactory(
-      () => UpcomingOrdersCubit(watchUpcomingOrders: sl()),
+      () => UpcomingOrdersCubit(
+        watchUpcomingOrders: sl(),
+        confirmOrderComplete: sl(),
+        historyOrdersCubit: sl(),
+      ),
     )
     ..registerFactory(
       () => HistoryOrdersCubit(getOrderHistory: sl()),

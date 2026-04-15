@@ -1,3 +1,4 @@
+import 'package:orda_merchant/core/error/exceptions.dart';
 import 'package:orda_merchant/core/utils/typedefs.dart';
 import 'package:orda_merchant/features/order/data/models/order_model.dart';
 import 'package:orda_merchant/features/order/domain/entities/order.dart';
@@ -7,6 +8,11 @@ abstract class OrderRemoteDataSource {
   Stream<List<OrderModel>> watchUpcomingOrders(String shopId);
 
   Future<List<OrderModel>> getOrderHistory(String shopId);
+
+  Future<OrderModel> updateOrderStatus({
+    required String orderId,
+    required String status,
+  });
 }
 
 class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
@@ -70,5 +76,30 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
         });
 
     return orders;
+  }
+
+  @override
+  Future<OrderModel> updateOrderStatus({
+    required String orderId,
+    required String status,
+  }) async {
+    final response = await client
+        .from('orders')
+        .update({
+          'status': status,
+          'updated_at': DateTime.now().toIso8601String(),
+        })
+        .eq('id', orderId)
+        .neq('status', status)
+        .select()
+        .maybeSingle();
+
+    if (response == null) {
+      throw const ServerException(
+        'Đơn hàng không tồn tại hoặc đã được cập nhật trạng thái',
+      );
+    }
+
+    return OrderModel.fromJson(response);
   }
 }

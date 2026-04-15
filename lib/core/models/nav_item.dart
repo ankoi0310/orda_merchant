@@ -31,8 +31,13 @@ final List<NavItem> dashboardActions = [
     route: AppRouter.menu,
   ),
   const NavItem(
-    label: 'Máy in',
-    icon: Iconsax.printer_copy,
+    label: 'Thống kê',
+    icon: Iconsax.chart_copy,
+    route: AppRouter.analytics,
+  ),
+  const NavItem(
+    label: 'Nhân viên',
+    icon: Iconsax.profile_2user_copy,
     route: AppRouter.order,
   ),
 ];
@@ -47,18 +52,5 @@ final List<NavItem> otherServices = [
     label: 'Cài đặt',
     icon: Iconsax.setting_copy,
     route: AppRouter.order,
-  ),
-];
-
-final List<NavItem> menuFloatingActions = [
-  const NavItem(
-    label: 'Quản lý món',
-    icon: Iconsax.box_copy,
-    route: AppRouter.menuItem,
-  ),
-  const NavItem(
-    label: 'Quản lý nhóm thực đơn',
-    icon: Iconsax.layer_copy,
-    route: AppRouter.menuCategory,
   ),
 ];

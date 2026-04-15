@@ -5,6 +5,8 @@ import 'package:orda_merchant/app.dart';
 import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/constant/app_constants.dart';
 import 'package:orda_merchant/di.dart';
+import 'package:orda_merchant/features/order/presentation/bloc/history_orders/history_orders_cubit.dart';
+import 'package:orda_merchant/features/order/presentation/bloc/upcoming_orders/upcoming_orders_cubit.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop_list/shop_list_bloc.dart';
 import 'package:orda_merchant/features/user/presentation/bloc/user_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -29,6 +31,8 @@ void main() async {
         BlocProvider(
           create: (_) => sl<UserBloc>()..add(GetUserProfile()),
         ),
+        BlocProvider(create: (_) => sl<UpcomingOrdersCubit>()),
+        BlocProvider(create: (_) => sl<HistoryOrdersCubit>()),
       ],
       child: const MyApp(),
     ),
