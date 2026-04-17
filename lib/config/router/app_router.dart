@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:orda_merchant/config/router/session_listenable.dart';
 import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/ui/layout/main_layout.dart';
+import 'package:orda_merchant/core/ui/pages/splash_page.dart';
 import 'package:orda_merchant/di.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:orda_merchant/features/auth/presentation/pages/login_page.dart';
@@ -24,6 +25,7 @@ import 'package:orda_merchant/features/shop/presentation/pages/shop_page.dart';
 import 'package:orda_merchant/features/user/presentation/pages/user_profile_page.dart';
 
 class AppRouter {
+  static const String splash = '/splash';
   static const String login = '/login';
   static const String register = '/register';
   static const String dashboard = '/dashboard';
@@ -44,9 +46,16 @@ class AppRouter {
   static const String profile = '/profile';
 
   static final config = GoRouter(
-    initialLocation: login,
+    initialLocation: splash,
     refreshListenable: SessionListenable(sl<SessionCubit>().stream),
     routes: [
+      GoRoute(
+        path: splash,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<AuthBloc>(),
+          child: const SplashPage(),
+        ),
+      ),
       GoRoute(
         path: login,
         builder: (context, state) => BlocProvider(
