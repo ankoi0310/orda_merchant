@@ -1,1 +1,1 @@
-const String shopIdKey = 'shop_id';
+const String shopKey = 'SHOP_LOCAL_KEY';

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/core/extensions/string_extension.dart';
 import 'package:orda_merchant/core/ui/components/text_form_field.dart';
@@ -12,6 +11,7 @@ import 'package:orda_merchant/features/menu_item/domain/usecases/create_menu_ite
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
 import 'package:orda_merchant/features/menu_item/presentation/widgets/category_dropdown_field.dart';
 import 'package:orda_merchant/features/menu_item/presentation/widgets/image_upload_field.dart';
+import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 
 class AddMenuItemForm extends StatefulWidget {
   const AddMenuItemForm({super.key});
@@ -47,7 +47,7 @@ class _AddMenuItemFormState extends State<AddMenuItemForm> {
 
   @override
   Widget build(BuildContext context) {
-    final shopId = context.read<SessionCubit>().state.shopId;
+    final shop = context.read<ShopBloc>().state.shop;
 
     return Scaffold(
       body: Form(
@@ -161,7 +161,7 @@ class _AddMenuItemFormState extends State<AddMenuItemForm> {
                 context.read<MenuItemBloc>().add(
                   CreateMenuItem(
                     CreateMenuItemParams(
-                      shopId: shopId,
+                      shopId: shop?.id,
                       categoryId: valueListenable.value,
                       name: nameTextControler.text.trim(),
                       description: descriptionTextController.text

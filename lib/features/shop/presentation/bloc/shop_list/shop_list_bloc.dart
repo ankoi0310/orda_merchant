@@ -11,7 +11,6 @@ class ShopListBloc extends Bloc<ShopListEvent, ShopListState> {
   ShopListBloc({required GetShopListUseCase getShopList})
     : _getShopList = getShopList,
       super(ShopListInitial()) {
-    on<ShopListEvent>((state, emit) => emit(ShopListLoading()));
     on<FetchShopList>(_onFetchShopList);
   }
 
@@ -21,6 +20,7 @@ class ShopListBloc extends Bloc<ShopListEvent, ShopListState> {
     FetchShopList event,
     Emitter<ShopListState> emit,
   ) async {
+    emit(ShopListLoading());
     final result = await _getShopList();
 
     result.fold((failure) {

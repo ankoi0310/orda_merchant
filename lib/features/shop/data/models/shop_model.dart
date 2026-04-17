@@ -19,4 +19,24 @@ class ShopModel extends Shop {
       imageUrl: json['image_url'] as String,
     );
   }
+
+  factory ShopModel.fromEntity(Shop shop) {
+    return ShopModel(
+      id: shop.id,
+      name: shop.name,
+      description: shop.description,
+      address: shop.address,
+      imageUrl: shop.imageUrl,
+    );
+  }
+
+  JsonData toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'address': address,
+      'image_url': imageUrl,
+    };
+  }
 }

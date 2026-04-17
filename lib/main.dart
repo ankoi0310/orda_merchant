@@ -7,6 +7,7 @@ import 'package:orda_merchant/core/constant/app_constants.dart';
 import 'package:orda_merchant/di.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/history_orders/history_orders_cubit.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/upcoming_orders/upcoming_orders_cubit.dart';
+import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop_list/shop_list_bloc.dart';
 import 'package:orda_merchant/features/user/presentation/bloc/user_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -28,6 +29,9 @@ void main() async {
       providers: [
         BlocProvider(create: (_) => sl<SessionCubit>()),
         BlocProvider(create: (_) => sl<ShopListBloc>()),
+        BlocProvider(
+          create: (_) => sl<ShopBloc>()..add(GetCachedShop()),
+        ),
         BlocProvider(
           create: (_) => sl<UserBloc>()..add(GetUserProfile()),
         ),

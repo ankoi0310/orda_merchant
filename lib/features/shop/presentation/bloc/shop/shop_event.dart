@@ -15,3 +15,14 @@ final class LoadShop extends ShopEvent {
   @override
   List<Object?> get props => [shopId];
 }
+
+final class GetCachedShop extends ShopEvent {}
+
+final class CacheShop extends ShopEvent {
+  const CacheShop(this.shop);
+
+  final Shop shop;
+
+  @override
+  List<Object?> get props => [shop];
+}

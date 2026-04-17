@@ -1,6 +1,15 @@
 part of 'shop_bloc.dart';
 
-enum ShopStatus { initial, loading, loaded, updating, updated, error }
+enum ShopStatus {
+  initial,
+  loading,
+  loaded,
+  updating,
+  updated,
+  caching,
+  cached,
+  error,
+}
 
 final class ShopState extends Equatable {
   const ShopState({
@@ -13,8 +22,13 @@ final class ShopState extends Equatable {
   final ShopStatus status;
   final String? error;
 
-  @override
-  List<Object?> get props => [status, shop, error];
+  bool get isLoading => status == ShopStatus.loading;
+
+  bool get isUpdating => status == ShopStatus.updating;
+
+  bool get isCaching => status == ShopStatus.caching;
+
+  bool get hasError => status == ShopStatus.error;
 
   ShopState copyWith({
     Shop? shop,
@@ -27,4 +41,7 @@ final class ShopState extends Equatable {
       error: error,
     );
   }
+
+  @override
+  List<Object?> get props => [status, shop, error];
 }

@@ -25,16 +25,20 @@ import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_lis
 import 'package:orda_merchant/features/order/data/datasources/order_remote_data_source.dart';
 import 'package:orda_merchant/features/order/data/repositories/order_repository_impl.dart';
 import 'package:orda_merchant/features/order/domain/repositories/order_repository.dart';
+import 'package:orda_merchant/features/order/domain/usecases/confirm_order_complete_use_case.dart';
 import 'package:orda_merchant/features/order/domain/usecases/get_order_history_use_case.dart';
 import 'package:orda_merchant/features/order/domain/usecases/watch_upcoming_orders_use_case.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/history_orders/history_orders_cubit.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/upcoming_orders/upcoming_orders_cubit.dart';
+import 'package:orda_merchant/features/shop/data/datasources/shop_local_data_source.dart';
 import 'package:orda_merchant/features/shop/data/datasources/shop_remote_data_source.dart';
 import 'package:orda_merchant/features/shop/data/repositories/shop_repository_impl.dart';
 import 'package:orda_merchant/features/shop/domain/repositories/shop_repository.dart';
+import 'package:orda_merchant/features/shop/domain/usecases/cache_shop_use_case.dart';
+import 'package:orda_merchant/features/shop/domain/usecases/get_cached_shop_use_case.dart';
 import 'package:orda_merchant/features/shop/domain/usecases/get_shop_list_use_case.dart';
 import 'package:orda_merchant/features/shop/domain/usecases/load_shop_use_case.dart';
-import 'package:orda_merchant/features/shop/presentation/bloc/shop_bloc.dart';
+import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop_list/shop_list_bloc.dart';
 import 'package:orda_merchant/features/user/data/datasource/user_remote_data_source.dart';
 import 'package:orda_merchant/features/user/data/repositories/user_repository_impl.dart';
@@ -58,12 +62,7 @@ Future<void> initInjection() async {
     ..registerLazySingleton<SharedPrefsService>(
       () => SharedPrefsServiceImpl(prefs),
     )
-    ..registerLazySingleton(
-      () => SessionCubit(
-        supabaseClient: sl(),
-        sharedPrefsService: sl(),
-      ),
-    );
+    ..registerLazySingleton(() => SessionCubit(supabaseClient: sl()));
 
   _initAuth(sl);
   _initUser(sl);
@@ -109,15 +108,31 @@ void _initShop(GetIt sl) {
     ..registerLazySingleton<ShopRemoteDataSource>(
       () => ShopRemoteDataSourceImpl(client: sl()),
     )
+    ..registerLazySingleton<ShopLocalDataSource>(
+      () => ShopLocalDataSourceImpl(sharedPrefsService: sl()),
+    )
     ..registerLazySingleton<ShopRepository>(
-      () => ShopRepositoryImpl(remoteDataSource: sl()),
+      () => ShopRepositoryImpl(
+        remoteDataSource: sl(),
+        localDataSource: sl(),
+      ),
     )
     ..registerLazySingleton(
       () => GetShopListUseCase(repository: sl()),
     )
-    ..registerLazySingleton(() => LoadShopUseCase(repository: sl()))
     ..registerLazySingleton(() => ShopListBloc(getShopList: sl()))
-    ..registerFactory(() => ShopBloc(loadShop: sl()));
+    ..registerLazySingleton(() => LoadShopUseCase(repository: sl()))
+    ..registerLazySingleton(
+      () => GetCachedShopUseCase(repository: sl()),
+    )
+    ..registerLazySingleton(() => CacheShopUseCase(repository: sl()))
+    ..registerLazySingleton(
+      () => ShopBloc(
+        loadShop: sl(),
+        getCachedShop: sl(),
+        cacheShop: sl(),
+      ),
+    );
 }
 
 void _initMenuCategory(GetIt sl) {

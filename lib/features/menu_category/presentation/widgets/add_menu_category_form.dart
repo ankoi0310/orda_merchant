@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/ui/components/text_form_field.dart';
 import 'package:orda_merchant/features/menu/presentation/widgets/bottom_form_action.dart';
 import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category/menu_category_bloc.dart';
+import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 
 class AddCategoryForm extends StatefulWidget {
   const AddCategoryForm({super.key});
@@ -26,7 +26,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
 
   @override
   Widget build(BuildContext context) {
-    final shopId = context.read<SessionCubit>().state.shopId;
+    final shop = context.read<ShopBloc>().state.shop;
 
     return Scaffold(
       body: Form(
@@ -61,7 +61,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
                     FocusScope.of(context).unfocus();
                     context.read<MenuCategoryBloc>().add(
                       CreateMenuCategory(
-                        shopId: shopId,
+                        shopId: shop?.id,
                         name: nameController.text.trim(),
                       ),
                     );

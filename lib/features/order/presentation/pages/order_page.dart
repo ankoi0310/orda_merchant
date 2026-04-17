@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/core/ui/components/loading_widget.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/history_orders/history_orders_cubit.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/upcoming_orders/upcoming_orders_cubit.dart';
 import 'package:orda_merchant/features/order/presentation/widgets/order_history_tab.dart';
 import 'package:orda_merchant/features/order/presentation/widgets/upcoming_orders_tab.dart';
+import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -24,13 +24,13 @@ class _OrderPageState extends State<OrderPage>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    final shopId = context.read<SessionCubit>().state.shopId;
+    final shop = context.read<ShopBloc>().state.shop;
 
     context.read<UpcomingOrdersCubit>().startWatchingUpcomingOrders(
-      shopId!,
+      shop!.id,
     );
 
-    context.read<HistoryOrdersCubit>().getOrderHistory(shopId);
+    context.read<HistoryOrdersCubit>().getOrderHistory(shop.id);
   }
 
   @override

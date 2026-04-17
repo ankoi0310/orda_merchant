@@ -21,6 +21,7 @@ import 'package:orda_merchant/features/menu_item/presentation/pages/add_menu_ite
 import 'package:orda_merchant/features/menu_item/presentation/pages/menu_item_page.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/update_menu_item_page.dart';
 import 'package:orda_merchant/features/order/presentation/pages/order_page.dart';
+import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 import 'package:orda_merchant/features/shop/presentation/pages/shop_page.dart';
 import 'package:orda_merchant/features/user/presentation/pages/user_profile_page.dart';
 
@@ -82,14 +83,11 @@ class AppRouter {
           ),
           ShellRoute(
             builder: (context, state, child) {
-              final shopId = context
-                  .read<SessionCubit>()
-                  .state
-                  .shopId;
+              final shop = context.read<ShopBloc>().state.shop;
               return BlocProvider(
                 create: (context) =>
                     sl<MenuCategoryListCubit>()
-                      ..startWatchingMenuCategories(shopId!),
+                      ..startWatchingMenuCategories(shop!.id),
                 child: child,
               );
             },
@@ -97,14 +95,11 @@ class AppRouter {
               GoRoute(
                 path: menu,
                 builder: (context, state) {
-                  final shopId = context
-                      .read<SessionCubit>()
-                      .state
-                      .shopId;
+                  final shop = context.read<ShopBloc>().state.shop;
                   return BlocProvider(
                     create: (context) =>
                         sl<MenuItemListCubit>()
-                          ..startWatchingMenuItems(shopId!),
+                          ..startWatchingMenuItems(shop!.id),
                     child: const MenuPage(),
                   );
                 },
@@ -112,14 +107,14 @@ class AppRouter {
                   GoRoute(
                     path: item,
                     builder: (context, state) {
-                      final shopId = context
-                          .read<SessionCubit>()
+                      final shop = context
+                          .read<ShopBloc>()
                           .state
-                          .shopId;
+                          .shop;
                       return BlocProvider(
                         create: (context) =>
                             sl<MenuItemListCubit>()
-                              ..startWatchingMenuItems(shopId!),
+                              ..startWatchingMenuItems(shop!.id),
                         child: const MenuItemPage(),
                       );
                     },
@@ -128,13 +123,13 @@ class AppRouter {
                         builder: (context, state, child) {
                           return BlocProvider(
                             create: (context) {
-                              final shopId = context
-                                  .read<SessionCubit>()
+                              final shop = context
+                                  .read<ShopBloc>()
                                   .state
-                                  .shopId;
+                                  .shop;
                               return sl<MenuCategoryListCubit>()
                                 ..startWatchingMenuCategories(
-                                  shopId!,
+                                  shop!.id,
                                 );
                             },
                           );

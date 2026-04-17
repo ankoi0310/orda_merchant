@@ -3,14 +3,17 @@ import 'package:orda_merchant/core/error/exceptions.dart';
 import 'package:orda_merchant/core/error/failure.dart';
 import 'package:orda_merchant/core/extensions/string_extension.dart';
 import 'package:orda_merchant/core/utils/typedefs.dart';
+import 'package:orda_merchant/features/shop/data/datasources/shop_local_data_source.dart';
 import 'package:orda_merchant/features/shop/data/datasources/shop_remote_data_source.dart';
+import 'package:orda_merchant/features/shop/data/models/shop_model.dart';
 import 'package:orda_merchant/features/shop/domain/entities/shop.dart';
 import 'package:orda_merchant/features/shop/domain/repositories/shop_repository.dart';
 
 class ShopRepositoryImpl implements ShopRepository {
-  const ShopRepositoryImpl({required this.remoteDataSource});
+  const ShopRepositoryImpl({required this.remoteDataSource, required this.localDataSource,});
 
   final ShopRemoteDataSource remoteDataSource;
+  final ShopLocalDataSource localDataSource;
 
   @override
   ResultFuture<Shop> getShop({String? shopId}) async {
@@ -40,6 +43,26 @@ class ShopRepositoryImpl implements ShopRepository {
       return Left(
         ServerFailure('Xảy ra lỗi khi tải danh sách cửa hàng: $e'),
       );
+    }
+  }
+
+  @override
+  VoidFuture cacheShop(Shop shop) async {
+    try {
+    await localDataSource.cacheShop(ShopModel.fromEntity(shop));
+    return const Right(unit);
+  } on CacheException catch (e) {
+    return Left(CacheFailure(e.message));
+    }
+  }
+
+  @override
+  ResultFuture<Shop?> getCachedShop() async {
+    try {
+      final shop = await localDataSource.getCachedShop();
+      return Right(shop);
+    } on CacheException catch (e) {
+      return Left(CacheFailure(e.message));
     }
   }
 }
