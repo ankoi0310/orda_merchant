@@ -15,15 +15,15 @@ class UserRepositoryImpl implements UserRepository {
   ResultFuture<UserProfile> getUserProfile() async {
     try {
       final userProfile = await remoteDataSource.getUserProfile();
-      return right(userProfile);
+      return Right(userProfile);
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return Left(Failure(e.message));
     }
   }
 
   @override
   VoidFuture signOut() async {
     await remoteDataSource.signOut();
-    return right(null);
+    return const Right(unit);
   }
 }

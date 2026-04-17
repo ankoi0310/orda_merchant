@@ -1,7 +1,13 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/service/shared_prefs_service.dart';
 import 'package:orda_merchant/core/service/supabase_storage_service.dart';
+import 'package:orda_merchant/features/analytics/data/datasources/analytics_remote_data_source.dart';
+import 'package:orda_merchant/features/analytics/data/repositories/analytics_repository_impl.dart';
+import 'package:orda_merchant/features/analytics/domain/repositories/analytics_repository.dart';
+import 'package:orda_merchant/features/analytics/domain/usecases/get_today_stats_use_case.dart';
+import 'package:orda_merchant/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:orda_merchant/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:orda_merchant/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:orda_merchant/features/auth/domain/repositories/auth_repository.dart';
@@ -59,6 +65,7 @@ Future<void> initInjection() async {
     ..registerLazySingleton<SupabaseStorageService>(
       () => SupabaseStorageServiceImpl(client: sl()),
     )
+    ..registerLazySingleton(() => FirebaseMessaging.instance)
     ..registerLazySingleton<SharedPrefsService>(
       () => SharedPrefsServiceImpl(prefs),
     )
@@ -70,6 +77,7 @@ Future<void> initInjection() async {
   _initMenuCategory(sl);
   _initMenuItem(sl);
   _initOrder(sl);
+  _initAnalytics(sl);
 }
 
 void _initAuth(GetIt sl) {
@@ -210,4 +218,18 @@ void _initOrder(GetIt sl) {
     ..registerFactory(
       () => HistoryOrdersCubit(getOrderHistory: sl()),
     );
+}
+
+void _initAnalytics(GetIt sl) {
+  sl
+    ..registerLazySingleton<AnalyticsRemoteDataSource>(
+      () => AnalyticsRemoteDataSourceImpl(client: sl()),
+    )
+    ..registerLazySingleton<AnalyticsRepository>(
+      () => AnalyticsRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerLazySingleton(
+      () => GetTodayStatsUseCase(repository: sl()),
+    )
+    ..registerFactory(() => AnalyticsBloc(getTodayStats: sl()));
 }

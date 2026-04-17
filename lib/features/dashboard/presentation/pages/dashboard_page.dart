@@ -18,11 +18,6 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final currentShop = context.watch<ShopBloc>().state.shop;
     return Scaffold(

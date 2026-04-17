@@ -3,8 +3,8 @@ import 'package:orda_merchant/features/user/presentation/widgets/general_section
 import 'package:orda_merchant/features/user/presentation/widgets/preferences_section.dart';
 import 'package:orda_merchant/features/user/presentation/widgets/profile_section.dart';
 
-class UserProfilePage extends StatelessWidget {
-  const UserProfilePage({super.key});
+class AccountPage extends StatelessWidget {
+  const AccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,6 +5,8 @@ import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/ui/layout/main_layout.dart';
 import 'package:orda_merchant/core/ui/pages/splash_page.dart';
 import 'package:orda_merchant/di.dart';
+import 'package:orda_merchant/features/analytics/presentation/bloc/analytics_bloc.dart';
+import 'package:orda_merchant/features/analytics/presentation/pages/analytics_page.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:orda_merchant/features/auth/presentation/pages/login_page.dart';
 import 'package:orda_merchant/features/dashboard/presentation/pages/dashboard_page.dart';
@@ -69,12 +71,21 @@ class AppRouter {
         routes: [
           GoRoute(
             path: dashboard,
-            builder: (context, state) => const DashboardPage(),
+            builder: (context, state) => BlocProvider(
+              create: (context) => sl<AnalyticsBloc>(),
+              child: const DashboardPage(),
+            ),
           ),
           GoRoute(
             path: order,
             builder: (context, state) {
-              return const OrderPage();
+              final shop = context.read<ShopBloc>().state.shop;
+              return BlocProvider(
+                create: (context) =>
+                    sl<UpcomingOrdersCubit>()
+                      ..startWatchingUpcomingOrders(shop!.id),
+                child: const OrderPage(),
+              );
             },
           ),
           GoRoute(
@@ -186,10 +197,14 @@ class AppRouter {
             ],
           ),
           GoRoute(
-            path: profile,
-            builder: (context, state) => const UserProfilePage(),
+            path: account,
+            builder: (context, state) => const AccountPage(),
           ),
         ],
+      ),
+      GoRoute(
+        path: analytics,
+        builder: (context, state) => const AnalyticsPage(),
       ),
     ],
     redirect: (context, state) {
