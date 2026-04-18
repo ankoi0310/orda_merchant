@@ -13,6 +13,11 @@ import 'package:orda_merchant/features/auth/data/repositories/auth_repository_im
 import 'package:orda_merchant/features/auth/domain/repositories/auth_repository.dart';
 import 'package:orda_merchant/features/auth/domain/usecases/sign_in_with_password_use_case.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:orda_merchant/features/invitation/data/datasources/invitation_remote_data_source.dart';
+import 'package:orda_merchant/features/invitation/data/repositories/invitation_repository_impl.dart';
+import 'package:orda_merchant/features/invitation/domain/repositories/invitation_repository.dart';
+import 'package:orda_merchant/features/invitation/domain/usecases/create_invitation_use_case.dart';
+import 'package:orda_merchant/features/invitation/presentation/bloc/invitation_bloc.dart';
 import 'package:orda_merchant/features/menu_category/data/datasources/menu_category_remote_data_source.dart';
 import 'package:orda_merchant/features/menu_category/data/repositories/menu_category_repository_impl.dart';
 import 'package:orda_merchant/features/menu_category/domain/repositories/menu_category_repository.dart';
@@ -78,6 +83,7 @@ Future<void> initInjection() async {
   _initMenuItem(sl);
   _initOrder(sl);
   _initAnalytics(sl);
+  _initInvitation(sl);
 }
 
 void _initAuth(GetIt sl) {
@@ -232,4 +238,18 @@ void _initAnalytics(GetIt sl) {
       () => GetTodayStatsUseCase(repository: sl()),
     )
     ..registerFactory(() => AnalyticsBloc(getTodayStats: sl()));
+}
+
+void _initInvitation(GetIt sl) {
+  sl
+    ..registerLazySingleton<InvitationRemoteDataSource>(
+      () => InvitationRemoteDataSourceImpl(client: sl()),
+    )
+    ..registerLazySingleton<InvitationRepository>(
+      () => InvitationRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerLazySingleton(
+      () => CreateInvitationUseCase(repository: sl()),
+    )
+    ..registerFactory(() => InvitationBloc(createInvitation: sl()));
 }
