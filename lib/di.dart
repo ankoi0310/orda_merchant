@@ -12,6 +12,7 @@ import 'package:orda_merchant/features/auth/data/datasources/auth_remote_data_so
 import 'package:orda_merchant/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:orda_merchant/features/auth/domain/repositories/auth_repository.dart';
 import 'package:orda_merchant/features/auth/domain/usecases/sign_in_with_password_use_case.dart';
+import 'package:orda_merchant/features/auth/domain/usecases/sign_up_with_email_password_use_case.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:orda_merchant/features/invitation/data/datasources/invitation_remote_data_source.dart';
 import 'package:orda_merchant/features/invitation/data/repositories/invitation_repository_impl.dart';
@@ -95,9 +96,17 @@ void _initAuth(GetIt sl) {
       () => AuthRepositoryImpl(remoteDataSource: sl()),
     )
     ..registerLazySingleton(
+      () => SignUpWithEmailPasswordUseCase(repository: sl()),
+    )
+    ..registerLazySingleton(
       () => SignInWithPasswordUseCase(repository: sl()),
     )
-    ..registerFactory(() => AuthBloc(signInWithPassword: sl()));
+    ..registerFactory(
+      () => AuthBloc(
+        signUpWithEmailPassword: sl(),
+        signInWithPassword: sl(),
+      ),
+    );
 }
 
 void _initUser(GetIt sl) {

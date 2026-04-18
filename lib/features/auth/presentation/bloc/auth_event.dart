@@ -7,6 +7,21 @@ sealed class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+final class SignUpWithEmailPassword extends AuthEvent {
+  const SignUpWithEmailPassword({
+    required this.fullName,
+    required this.email,
+    required this.password,
+  });
+
+  final String fullName;
+  final String email;
+  final String password;
+
+  @override
+  List<Object?> get props => [fullName, email, password];
+}
+
 final class SignInWithPassword extends AuthEvent {
   const SignInWithPassword({
     required this.email,

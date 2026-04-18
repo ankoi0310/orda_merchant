@@ -28,52 +28,64 @@ class LoginPage extends StatelessWidget {
         return Scaffold(
           body: Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsetsGeometry.symmetric(
-                        vertical: context.height * .05,
-                      ),
-                      child: Column(
-                        spacing: 8,
-                        children: [
-                          Text(
-                            'Orda',
-                            style: context.textTheme.displayLarge!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  foreground: Paint()
-                                    ..shader =
-                                        LinearGradient(
-                                          colors: [
-                                            context.colors.primary,
-                                            context.colors.primary
-                                                .withValues(
-                                                  alpha: 0.7,
-                                                ),
-                                          ],
-                                        ).createShader(
-                                          const Rect.fromLTWH(
-                                            0,
-                                            0,
-                                            80,
-                                            70,
+              SingleChildScrollView(
+                padding: const .symmetric(horizontal: 16),
+                child: SizedBox(
+                  height: context.height,
+                  child: Column(
+                    mainAxisAlignment: .center,
+                    crossAxisAlignment: .stretch,
+                    children: [
+                      Container(
+                        margin: .symmetric(
+                          vertical: context.height * .05,
+                        ),
+                        child: Column(
+                          spacing: 8,
+                          children: [
+                            Text(
+                              'Orda Merchant',
+                              style: context.textTheme.displayMedium!
+                                  .copyWith(
+                                    fontWeight: .bold,
+                                    foreground: Paint()
+                                      ..shader =
+                                          LinearGradient(
+                                            colors: [
+                                              context.colors.primary,
+                                              context.colors.primary
+                                                  .withValues(
+                                                    alpha: 0.7,
+                                                  ),
+                                            ],
+                                          ).createShader(
+                                            const .fromLTWH(
+                                              0,
+                                              0,
+                                              80,
+                                              70,
+                                            ),
                                           ),
-                                        ),
-                                ),
-                          ),
-                          Text(
-                            'Welcome back!',
-                            style: context.textTheme.headlineLarge,
-                          ),
-                        ],
+                                  ),
+                            ),
+                            Text(
+                              'Welcome back!',
+                              style: context.textTheme.headlineLarge,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const LoginForm(),
-                  ],
+                      const LoginForm(),
+                      Padding(
+                        padding: const .only(top: 16),
+                        child: OutlinedButton(
+                          onPressed: () =>
+                              context.go(AppRouter.register),
+                          child: const Text('Đăng ký'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               if (state is AuthLoading)
