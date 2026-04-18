@@ -34,6 +34,11 @@ import 'package:orda_merchant/features/menu_item/domain/usecases/update_menu_ite
 import 'package:orda_merchant/features/menu_item/domain/usecases/watch_menu_items_use_case.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item/menu_item_bloc.dart';
 import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_list/menu_item_list_cubit.dart';
+import 'package:orda_merchant/features/merchant_application/data/datasources/merchant_application_remote_data_source.dart';
+import 'package:orda_merchant/features/merchant_application/data/repositories/merchant_application_repository_impl.dart';
+import 'package:orda_merchant/features/merchant_application/domain/repositories/merchant_application_repository.dart';
+import 'package:orda_merchant/features/merchant_application/domain/usecases/register_merchant_use_case.dart';
+import 'package:orda_merchant/features/merchant_application/presentation/bloc/merchant_application_bloc.dart';
 import 'package:orda_merchant/features/order/data/datasources/order_remote_data_source.dart';
 import 'package:orda_merchant/features/order/data/repositories/order_repository_impl.dart';
 import 'package:orda_merchant/features/order/domain/repositories/order_repository.dart';
@@ -79,6 +84,7 @@ Future<void> initInjection() async {
 
   _initAuth(sl);
   _initUser(sl);
+  _initMerchantApplication(sl);
   _initShop(sl);
   _initMenuCategory(sl);
   _initMenuItem(sl);
@@ -123,6 +129,22 @@ void _initUser(GetIt sl) {
     ..registerLazySingleton(() => SignOutUseCase(repository: sl()))
     ..registerFactory(
       () => UserBloc(getUserProfile: sl(), signOut: sl()),
+    );
+}
+
+void _initMerchantApplication(GetIt sl) {
+  sl
+    ..registerLazySingleton<MerchantApplicationRemoteDataSource>(
+      () => MerchantApplicationRemoteDataSourceImpl(client: sl()),
+    )
+    ..registerLazySingleton<MerchantApplicationRepository>(
+      () => MerchantApplicationRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerLazySingleton(
+      () => RegisterMerchantUseCase(repository: sl()),
+    )
+    ..registerFactory(
+      () => MerchantApplicationBloc(registerMerchant: sl()),
     );
 }
 
