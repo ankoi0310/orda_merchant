@@ -3,11 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:orda_merchant/config/router/session_listenable.dart';
 import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/ui/pages/splash_page.dart';
+import 'package:orda_merchant/core/ui/pages/welcome_page.dart';
 import 'package:orda_merchant/di.dart';
 import 'package:orda_merchant/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:orda_merchant/features/analytics/presentation/pages/analytics_page.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:orda_merchant/features/auth/presentation/pages/login_page.dart';
+import 'package:orda_merchant/features/auth/presentation/pages/register_page.dart';
 import 'package:orda_merchant/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:orda_merchant/features/invitation/presentation/bloc/invitation_bloc.dart';
 import 'package:orda_merchant/features/menu/presentation/pages/menu_page.dart';
@@ -22,6 +24,9 @@ import 'package:orda_merchant/features/menu_item/presentation/bloc/menu_item_lis
 import 'package:orda_merchant/features/menu_item/presentation/pages/add_menu_item_page.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/menu_item_page.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/update_menu_item_page.dart';
+import 'package:orda_merchant/features/merchant_application/presentation/bloc/merchant_application_bloc.dart';
+import 'package:orda_merchant/features/merchant_application/presentation/pages/merchant_application_page.dart';
+import 'package:orda_merchant/features/order/presentation/bloc/upcoming_orders/upcoming_orders_cubit.dart';
 import 'package:orda_merchant/features/order/presentation/pages/order_page.dart';
 import 'package:orda_merchant/features/setting/presentation/pages/setting_page.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
@@ -63,6 +68,17 @@ class AppRouter {
         builder: (context, state) => BlocProvider(
           create: (_) => sl<AuthBloc>(),
           child: const SplashPage(),
+        ),
+      ),
+      GoRoute(
+        path: welcome,
+        builder: (context, state) => const WelcomePage(),
+      ),
+      GoRoute(
+        path: register,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<AuthBloc>(),
+          child: const RegisterPage(),
         ),
       ),
       GoRoute(
@@ -235,7 +251,6 @@ class AppRouter {
         if (isLogin) {
           return dashboard;
         }
-        return null;
       }
 
       return null;

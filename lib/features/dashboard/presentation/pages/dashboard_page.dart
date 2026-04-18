@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
+import 'package:orda_merchant/core/models/nav_item.dart';
 import 'package:orda_merchant/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:orda_merchant/features/dashboard/presentation/widgets/dashboard_actions_grid_view.dart';
 import 'package:orda_merchant/features/dashboard/presentation/widgets/dashboard_overview.dart';
@@ -9,14 +11,9 @@ import 'package:orda_merchant/features/shop/domain/entities/shop.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop_list/shop_list_bloc.dart';
 
-class DashboardPage extends StatefulWidget {
+class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
-  @override
-  State<DashboardPage> createState() => _DashboardPageState();
-}
-
-class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     final currentShop = context.watch<ShopBloc>().state.shop;
@@ -85,57 +82,6 @@ class _DashboardPageState extends State<DashboardPage> {
             DashboardOverview(),
             SizedBox(height: 32),
             DashboardActionsGridView(),
-
-            // other services
-            // Container(
-            //   padding: const EdgeInsets.symmetric(vertical: 16),
-            //   decoration: BoxDecoration(
-            //     color: context.colors.secondaryContainer,
-            //   ),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     spacing: 4,
-            //     children: [
-            //       Padding(
-            //         padding: const EdgeInsets.symmetric(
-            //           horizontal: 16,
-            //         ),
-            //         child: Text(
-            //           'Dịch vụ khác',
-            //           style: Theme.of(context).textTheme.titleMedium!
-            //               .copyWith(fontWeight: FontWeight.bold),
-            //         ),
-            //       ),
-            //       ListView.separated(
-            //         padding: EdgeInsets.zero,
-            //         shrinkWrap: true,
-            //         physics: const NeverScrollableScrollPhysics(),
-            //         itemCount: otherServices.length,
-            //         itemBuilder: (context, index) {
-            //           final service = otherServices[index];
-            //           return ListTile(
-            //             tileColor: context.colors.secondaryContainer,
-            //             onTap: () => context.push(service.route),
-            //             leading: Icon(service.icon),
-            //             titleTextStyle: context.textTheme.bodyMedium,
-            //             title: Text(service.label),
-            //             trailing: const Icon(
-            //               Icons.arrow_forward_ios,
-            //               size: 16,
-            //             ),
-            //           );
-            //         },
-            //         separatorBuilder: (context, index) {
-            //           return const Divider(
-            //             height: 1,
-            //             indent: 16,
-            //             endIndent: 16,
-            //           );
-            //         },
-            //       ),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),

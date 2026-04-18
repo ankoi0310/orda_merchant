@@ -26,11 +26,7 @@ class _OrderPageState extends State<OrderPage>
 
     final shop = context.read<ShopBloc>().state.shop;
 
-    context.read<UpcomingOrdersCubit>().startWatchingUpcomingOrders(
-      shop!.id,
-    );
-
-    context.read<HistoryOrdersCubit>().getOrderHistory(shop.id);
+    context.read<HistoryOrdersCubit>().getOrderHistory(shop!.id);
   }
 
   @override

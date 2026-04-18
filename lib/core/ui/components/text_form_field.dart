@@ -29,7 +29,7 @@ class AppTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       spacing: 8,
       children: [
         Text.rich(
@@ -54,8 +54,8 @@ class AppTextFormField extends StatelessWidget {
           onFieldSubmitted: onFieldSubmitted,
           selectAllOnFocus: true,
           enableInteractiveSelection: true,
-          textCapitalization: TextCapitalization.sentences,
-          autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+          textCapitalization: .sentences,
+          autovalidateMode: .onUserInteractionIfError,
           validator: validator,
         ),
       ],
@@ -88,10 +88,21 @@ class _AppPasswordFormFieldState extends State<AppPasswordFormField> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       spacing: 8,
       children: [
-        Text('Mật khẩu', style: context.textTheme.bodyLarge),
+        Text.rich(
+          TextSpan(
+            text: 'Mật khẩu',
+            children: [
+              TextSpan(
+                text: '*',
+                style: TextStyle(color: context.colors.error),
+              ),
+            ],
+            style: context.textTheme.bodyLarge,
+          ),
+        ),
         TextFormField(
           enabled: widget.enabled,
           controller: widget.controller,
@@ -111,7 +122,7 @@ class _AppPasswordFormFieldState extends State<AppPasswordFormField> {
           onFieldSubmitted: widget.onFieldSubmitted,
           selectAllOnFocus: true,
           enableInteractiveSelection: true,
-          autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+          autovalidateMode: .onUserInteractionIfError,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Mật khẩu không được để trống';

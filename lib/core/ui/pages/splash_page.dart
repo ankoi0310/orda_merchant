@@ -21,10 +21,14 @@ class SplashPage extends StatelessWidget {
 
     return MultiBlocListener(
       listeners: [
+        // Lắng nghe lời mời, nếu lời mời có dữ liệu => chuyển sang trang lời mời
         BlocListener<ShopListBloc, ShopListState>(
           listener: (context, state) async {
             if (state is ShopListLoaded) {
-              if (shopState.shop == null) {
+              if (state.shops.isEmpty) {
+                // Kiểm tra lời mời
+                // context.go(AppRouter.welcome);
+              } else if (shopState.shop == null) {
                 context.read<ShopBloc>().add(
                   CacheShop(state.shops.first),
                 );
@@ -34,9 +38,8 @@ class SplashPage extends StatelessWidget {
         ),
         BlocListener<ShopBloc, ShopState>(
           listener: (context, state) async {
-            print(state);
             if (state.shop != null) {
-              await context.push(AppRouter.dashboard);
+              context.go(AppRouter.dashboard);
             }
           },
         ),
