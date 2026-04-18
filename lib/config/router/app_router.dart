@@ -23,6 +23,7 @@ import 'package:orda_merchant/features/menu_item/presentation/pages/add_menu_ite
 import 'package:orda_merchant/features/menu_item/presentation/pages/menu_item_page.dart';
 import 'package:orda_merchant/features/menu_item/presentation/pages/update_menu_item_page.dart';
 import 'package:orda_merchant/features/order/presentation/pages/order_page.dart';
+import 'package:orda_merchant/features/setting/presentation/pages/setting_page.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 import 'package:orda_merchant/features/shop/presentation/pages/shop_page.dart';
 import 'package:orda_merchant/features/user/presentation/pages/user_profile_page.dart';
@@ -34,6 +35,11 @@ class AppRouter {
   static const String dashboard = '/dashboard';
   static const String order = '/order';
   static const String shop = '/shop';
+  static const String merchantApplication = '/merchant-application';
+  static const String member = '/member';
+  static const String setting = '/setting';
+  static const String analytics = '/analytics';
+  static const String account = '/account';
   static const String menu = '/menu';
   static const String item = '/item';
   static const String menuItem = '$menu$item';
@@ -66,141 +72,148 @@ class AppRouter {
           child: const LoginPage(),
         ),
       ),
+      GoRoute(
+        path: dashboard,
+        builder: (context, state) => BlocProvider(
+          create: (context) => sl<AnalyticsBloc>(),
+          child: const DashboardPage(),
+        ),
+      ),
+      GoRoute(
+        path: order,
+        builder: (context, state) {
+          final shop = context.read<ShopBloc>().state.shop;
+          return BlocProvider(
+            create: (context) =>
+                sl<UpcomingOrdersCubit>()
+                  ..startWatchingUpcomingOrders(shop!.id),
+            child: const OrderPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: merchantApplication,
+        builder: (context, state) => BlocProvider(
+          create: (context) => sl<MerchantApplicationBloc>(),
+          child: const MerchantApplicationPage(),
+        ),
+      ),
+      GoRoute(
+        path: shop,
+        builder: (context, state) => const ShopPage(),
+      ),
+      GoRoute(
+        path: member,
+        builder: (context, state) => BlocProvider(
+          create: (context) => sl<InvitationBloc>(),
+          child: const ShopMemberPage(),
+        ),
+      ),
+      GoRoute(
+        path: setting,
+        builder: (context, state) => const SettingPage(),
+      ),
       ShellRoute(
-        builder: (context, state, child) => MainLayout(child: child),
+        builder: (context, state, child) {
+          final shop = context.read<ShopBloc>().state.shop;
+          return BlocProvider(
+            create: (context) =>
+                sl<MenuCategoryListCubit>()
+                  ..startWatchingMenuCategories(shop!.id),
+            child: child,
+          );
+        },
         routes: [
           GoRoute(
-            path: dashboard,
-            builder: (context, state) => BlocProvider(
-              create: (context) => sl<AnalyticsBloc>(),
-              child: const DashboardPage(),
-            ),
-          ),
-          GoRoute(
-            path: order,
+            path: menu,
             builder: (context, state) {
               final shop = context.read<ShopBloc>().state.shop;
               return BlocProvider(
                 create: (context) =>
-                    sl<UpcomingOrdersCubit>()
-                      ..startWatchingUpcomingOrders(shop!.id),
-                child: const OrderPage(),
-              );
-            },
-          ),
-          GoRoute(
-            path: shop,
-            builder: (context, state) => const ShopPage(),
-          ),
-          ShellRoute(
-            builder: (context, state, child) {
-              final shop = context.read<ShopBloc>().state.shop;
-              return BlocProvider(
-                create: (context) =>
-                    sl<MenuCategoryListCubit>()
-                      ..startWatchingMenuCategories(shop!.id),
-                child: child,
+                    sl<MenuItemListCubit>()
+                      ..startWatchingMenuItems(shop!.id),
+                child: const MenuPage(),
               );
             },
             routes: [
               GoRoute(
-                path: menu,
+                path: item,
                 builder: (context, state) {
                   final shop = context.read<ShopBloc>().state.shop;
                   return BlocProvider(
                     create: (context) =>
                         sl<MenuItemListCubit>()
                           ..startWatchingMenuItems(shop!.id),
-                    child: const MenuPage(),
+                    child: const MenuItemPage(),
                   );
                 },
                 routes: [
-                  GoRoute(
-                    path: item,
-                    builder: (context, state) {
-                      final shop = context
-                          .read<ShopBloc>()
-                          .state
-                          .shop;
+                  ShellRoute(
+                    builder: (context, state, child) {
                       return BlocProvider(
-                        create: (context) =>
-                            sl<MenuItemListCubit>()
-                              ..startWatchingMenuItems(shop!.id),
-                        child: const MenuItemPage(),
+                        create: (context) {
+                          final shop = context
+                              .read<ShopBloc>()
+                              .state
+                              .shop;
+                          return sl<MenuCategoryListCubit>()
+                            ..startWatchingMenuCategories(shop!.id);
+                        },
                       );
                     },
                     routes: [
-                      ShellRoute(
-                        builder: (context, state, child) {
-                          return BlocProvider(
-                            create: (context) {
-                              final shop = context
-                                  .read<ShopBloc>()
-                                  .state
-                                  .shop;
-                              return sl<MenuCategoryListCubit>()
-                                ..startWatchingMenuCategories(
-                                  shop!.id,
-                                );
-                            },
-                          );
-                        },
-                        routes: [
-                          GoRoute(
-                            path: 'add',
-                            builder: (context, state) => BlocProvider(
-                              create: (context) => sl<MenuItemBloc>(),
-                              child: const AddMenuItemPage(),
-                            ),
-                          ),
-                          GoRoute(
-                            path: ':id/edit',
-                            builder: (context, state) {
-                              final id = state.pathParameters['id']!;
-                              final item = state.extra! as MenuItem;
-                              return BlocProvider(
-                                create: (context) =>
-                                    sl<MenuItemBloc>(),
-                                child: UpdateMenuItemPage(
-                                  id: id,
-                                  item: item,
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  GoRoute(
-                    path: category,
-                    builder: (_, _) => const MenuCategoryPage(),
-                    routes: [
                       GoRoute(
                         path: 'add',
-                        builder: (_, _) => BlocProvider(
-                          create: (context) => sl<MenuCategoryBloc>(),
-                          child: const AddMenuCategoryPage(),
+                        builder: (context, state) => BlocProvider(
+                          create: (context) => sl<MenuItemBloc>(),
+                          child: const AddMenuItemPage(),
                         ),
                       ),
                       GoRoute(
                         path: ':id/edit',
-                        builder: (_, _) => BlocProvider(
-                          create: (context) => sl<MenuCategoryBloc>(),
-                          child: const EditMenuCategoryPage(),
-                        ),
+                        builder: (context, state) {
+                          final id = state.pathParameters['id']!;
+                          final item = state.extra! as MenuItem;
+                          return BlocProvider(
+                            create: (context) => sl<MenuItemBloc>(),
+                            child: UpdateMenuItemPage(
+                              id: id,
+                              item: item,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
                 ],
               ),
+              GoRoute(
+                path: category,
+                builder: (_, _) => const MenuCategoryPage(),
+                routes: [
+                  GoRoute(
+                    path: 'add',
+                    builder: (_, _) => BlocProvider(
+                      create: (context) => sl<MenuCategoryBloc>(),
+                      child: const AddMenuCategoryPage(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: ':id/edit',
+                    builder: (_, _) => BlocProvider(
+                      create: (context) => sl<MenuCategoryBloc>(),
+                      child: const EditMenuCategoryPage(),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-          GoRoute(
-            path: account,
-            builder: (context, state) => const AccountPage(),
-          ),
         ],
+      ),
+      GoRoute(
+        path: account,
+        builder: (context, state) => const AccountPage(),
       ),
       GoRoute(
         path: analytics,

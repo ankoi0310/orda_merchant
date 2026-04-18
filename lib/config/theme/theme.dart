@@ -106,30 +106,47 @@ class MaterialTheme {
       ),
     ),
     buttonTheme: ButtonThemeData(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusGeometry.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: .circular(16)),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         shape: WidgetStatePropertyAll<OutlinedBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.circular(8),
-          ),
+          RoundedRectangleBorder(borderRadius: .circular(12)),
+        ),
+        side: WidgetStatePropertyAll<BorderSide>(
+          BorderSide(color: colorScheme.primary),
         ),
         padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
-          EdgeInsetsGeometry.symmetric(horizontal: 16, vertical: 16),
+          .all(16),
         ),
         backgroundColor: WidgetStatePropertyAll(colorScheme.primary),
         foregroundColor: WidgetStatePropertyAll(
           colorScheme.onPrimary,
         ),
         textStyle: WidgetStatePropertyAll(
-          textTheme.titleMedium!.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          textTheme.titleMedium!.copyWith(fontWeight: .bold),
         ),
       ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        shape: WidgetStatePropertyAll<OutlinedBorder>(
+          RoundedRectangleBorder(borderRadius: .circular(12)),
+        ),
+        side: WidgetStatePropertyAll<BorderSide>(
+          BorderSide(color: colorScheme.primary),
+        ),
+        padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
+          .all(16),
+        ),
+        textStyle: WidgetStatePropertyAll(
+          textTheme.titleMedium!.copyWith(fontWeight: .bold),
+        ),
+      ),
+    ),
+    listTileTheme: const ListTileThemeData(
+      minTileHeight: 0,
+      contentPadding: .zero,
     ),
   );
 

@@ -38,7 +38,12 @@ final List<NavItem> dashboardActions = [
   const NavItem(
     label: 'Nhân viên',
     icon: Iconsax.profile_2user_copy,
-    route: AppRouter.order,
+    route: AppRouter.member,
+  ),
+  const NavItem(
+    label: 'Cài đặt',
+    icon: Iconsax.setting_2_copy,
+    route: AppRouter.setting,
   ),
 ];
 
