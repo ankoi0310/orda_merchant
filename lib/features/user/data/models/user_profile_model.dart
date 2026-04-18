@@ -7,7 +7,6 @@ class UserProfileModel extends UserProfile {
     required super.id,
     required super.fullName,
     required super.email,
-    required super.phone,
   });
 
   factory UserProfileModel.fromJson(User user, JsonData json) {
@@ -15,7 +14,6 @@ class UserProfileModel extends UserProfile {
       id: user.id,
       fullName: json['full_name'] as String,
       email: user.email ?? '',
-      phone: user.phone ?? '',
     );
   }
 }
