@@ -4,14 +4,14 @@ import 'package:orda_merchant/core/extensions/string_extension.dart';
 import 'package:orda_merchant/core/ui/components/text_form_field.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
 
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key});
 
   @override
-  State<RegisterForm> createState() => _RegisterFormState();
+  State<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _SignUpFormState extends State<SignUpForm> {
   final formKey = GlobalKey<FormState>();
   final fullNameController = TextEditingController();
   final emailController = TextEditingController();

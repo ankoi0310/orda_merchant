@@ -1,5 +1,6 @@
 import 'package:orda_merchant/core/error/auth_error_mapper.dart';
 import 'package:orda_merchant/core/error/exceptions.dart';
+import 'package:orda_merchant/features/auth/domain/usecases/sign_in_with_password_use_case.dart';
 import 'package:orda_merchant/features/auth/domain/usecases/sign_up_with_email_password_use_case.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -8,10 +9,9 @@ abstract class AuthRemoteDataSource {
     SignUpWithEmailPasswordParams params,
   );
 
-  Future<User?> signInWithPassword({
-    required String email,
-    required String password,
-  });
+  Future<User?> signInWithEmailPassword(
+    SignInWithEmailPasswordParams params,
+  );
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -38,14 +38,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<User?> signInWithPassword({
-    required String email,
-    required String password,
-  }) async {
+  Future<User?> signInWithEmailPassword(
+    SignInWithEmailPasswordParams params,
+  ) async {
     try {
       final response = await client.auth.signInWithPassword(
-        email: email,
-        password: password,
+        email: params.email,
+        password: params.password,
       );
 
       return response.user;

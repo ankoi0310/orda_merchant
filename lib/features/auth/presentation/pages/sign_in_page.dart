@@ -6,10 +6,10 @@ import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/core/ui/components/loading_widget.dart';
 import 'package:orda_merchant/core/utils/app_util.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:orda_merchant/features/auth/presentation/widgets/login_form.dart';
+import 'package:orda_merchant/features/auth/presentation/widgets/sign_in_form.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class LoginPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const LoginForm(),
+                      const SignInForm(),
                       Padding(
                         padding: const .only(top: 16),
                         child: OutlinedButton(

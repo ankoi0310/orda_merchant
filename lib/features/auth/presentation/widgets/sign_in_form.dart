@@ -6,14 +6,14 @@ import 'package:orda_merchant/core/extensions/string_extension.dart';
 import 'package:orda_merchant/core/ui/components/text_form_field.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class SignInForm extends StatefulWidget {
+  const SignInForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignInForm> createState() => _SignInFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignInFormState extends State<SignInForm> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -33,7 +33,7 @@ class _LoginFormState extends State<LoginForm> {
     if (formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
       context.read<AuthBloc>().add(
-        SignInWithPassword(
+        SignInWithEmailPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         ),

@@ -22,8 +22,8 @@ final class SignUpWithEmailPassword extends AuthEvent {
   List<Object?> get props => [fullName, email, password];
 }
 
-final class SignInWithPassword extends AuthEvent {
-  const SignInWithPassword({
+final class SignInWithEmailPassword extends AuthEvent {
+  const SignInWithEmailPassword({
     required this.email,
     required this.password,
   });

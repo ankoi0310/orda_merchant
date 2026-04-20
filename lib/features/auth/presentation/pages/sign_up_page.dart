@@ -6,10 +6,10 @@ import 'package:orda_merchant/core/extensions/build_context_extension.dart';
 import 'package:orda_merchant/core/ui/components/loading_widget.dart';
 import 'package:orda_merchant/core/utils/app_util.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:orda_merchant/features/auth/presentation/widgets/register_form.dart';
+import 'package:orda_merchant/features/auth/presentation/widgets/sign_up_form.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class RegisterPage extends StatelessWidget {
                       children: [
                         buildContainer(context),
                         const SizedBox(height: 32),
-                        const RegisterForm(),
+                        const SignUpForm(),
                         Padding(
                           padding: const .only(top: 16),
                           child: OutlinedButton(

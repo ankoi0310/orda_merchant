@@ -11,17 +11,17 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
     required SignUpWithEmailPasswordUseCase signUpWithEmailPassword,
-    required SignInWithPasswordUseCase signInWithPassword,
+    required SignInWithEmailPasswordUseCase signInWithEmailPassword,
   }) : _signUpWithEmailPassword = signUpWithEmailPassword,
-       _signInWithPassword = signInWithPassword,
+       _signInWithEmailPassword = signInWithEmailPassword,
        super(AuthInitial()) {
     on<AuthEvent>((_, emit) => emit(AuthLoading()));
     on<SignUpWithEmailPassword>(_onSignUpWithEmailPassword);
-    on<SignInWithPassword>(_onSignInWithPassword);
+    on<SignInWithEmailPassword>(_onSignInWithEmailPassword);
   }
 
   final SignUpWithEmailPasswordUseCase _signUpWithEmailPassword;
-  final SignInWithPasswordUseCase _signInWithPassword;
+  final SignInWithEmailPasswordUseCase _signInWithEmailPassword;
 
   Future<void> _onSignUpWithEmailPassword(
     SignUpWithEmailPassword event,
@@ -41,12 +41,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _onSignInWithPassword(
-    SignInWithPassword event,
+  Future<void> _onSignInWithEmailPassword(
+    SignInWithEmailPassword event,
     Emitter<AuthState> emit,
   ) async {
-    final result = await _signInWithPassword(
-      SignInWithPasswordParams(
+    final result = await _signInWithEmailPassword(
+      SignInWithEmailPasswordParams(
         email: event.email,
         password: event.password,
       ),

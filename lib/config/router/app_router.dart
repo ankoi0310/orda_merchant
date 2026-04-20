@@ -8,8 +8,8 @@ import 'package:orda_merchant/di.dart';
 import 'package:orda_merchant/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:orda_merchant/features/analytics/presentation/pages/analytics_page.dart';
 import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:orda_merchant/features/auth/presentation/pages/login_page.dart';
-import 'package:orda_merchant/features/auth/presentation/pages/register_page.dart';
+import 'package:orda_merchant/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:orda_merchant/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:orda_merchant/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:orda_merchant/features/invitation/presentation/bloc/invitation_bloc.dart';
 import 'package:orda_merchant/features/menu/presentation/pages/menu_page.dart';
@@ -31,10 +31,12 @@ import 'package:orda_merchant/features/order/presentation/pages/order_page.dart'
 import 'package:orda_merchant/features/setting/presentation/pages/setting_page.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 import 'package:orda_merchant/features/shop/presentation/pages/shop_page.dart';
+import 'package:orda_merchant/features/shop_member/presentation/pages/shop_member_page.dart';
 import 'package:orda_merchant/features/user/presentation/pages/user_profile_page.dart';
 
 class AppRouter {
   static const String splash = '/splash';
+  static const String welcome = '/welcome';
   static const String login = '/login';
   static const String register = '/register';
   static const String dashboard = '/dashboard';
@@ -57,7 +59,8 @@ class AppRouter {
 
   static String updateMenuCategory(String id) =>
       '$menu$category/$id/edit';
-  static const String profile = '/profile';
+
+  static List<String> publicRoutes = [login, register];
 
   static final config = GoRouter(
     initialLocation: splash,
@@ -78,14 +81,14 @@ class AppRouter {
         path: register,
         builder: (context, state) => BlocProvider(
           create: (_) => sl<AuthBloc>(),
-          child: const RegisterPage(),
+          child: const SignUpPage(),
         ),
       ),
       GoRoute(
         path: login,
         builder: (context, state) => BlocProvider(
           create: (_) => sl<AuthBloc>(),
-          child: const LoginPage(),
+          child: const SignInPage(),
         ),
       ),
       GoRoute(
@@ -239,16 +242,17 @@ class AppRouter {
     redirect: (context, state) {
       final authState = sl<SessionCubit>().state;
 
-      final isLogin = state.matchedLocation == login;
+      final location = state.matchedLocation;
+      final isPublic = publicRoutes.contains(location);
 
       /// Nếu chưa đăng nhập
       if (!authState.isAuthenticated) {
-        return isLogin ? null : login;
+        return isPublic ? null : login;
       }
 
       /// Nếu đã đăng nhập
       if (authState.isAuthenticated) {
-        if (isLogin) {
+        if (isPublic) {
           return dashboard;
         }
       }

@@ -107,12 +107,12 @@ void _initAuth(GetIt sl) {
       () => SignUpWithEmailPasswordUseCase(repository: sl()),
     )
     ..registerLazySingleton(
-      () => SignInWithPasswordUseCase(repository: sl()),
+      () => SignInWithEmailPasswordUseCase(repository: sl()),
     )
     ..registerFactory(
       () => AuthBloc(
         signUpWithEmailPassword: sl(),
-        signInWithPassword: sl(),
+        signInWithEmailPassword: sl(),
       ),
     );
 }
