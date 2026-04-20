@@ -3,5 +3,13 @@ import 'package:orda_merchant/features/invitation/domain/entities/invitation.dar
 import 'package:orda_merchant/features/invitation/domain/usecases/create_invitation_use_case.dart';
 
 abstract class InvitationRepository {
-  ResultFuture<Invitation> createInvitation(InvitationParams params);
+  ResultFuture<Invitation?> getInvitation();
+  ResultFuture<Invitation> createInvitation(
+    CreateInvitationParams params,
+  );
+
+  VoidFuture updateInvitationStatus({
+    required String id,
+    required InvitationStatus status,
+  });
 }

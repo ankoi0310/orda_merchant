@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:orda_merchant/config/gen/assets.gen.dart';
 import 'package:orda_merchant/config/router/app_router.dart';
 import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
+import 'package:orda_merchant/features/invitation/presentation/bloc/invitation_bloc.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop_list/shop_list_bloc.dart';
 
@@ -17,6 +18,7 @@ class SplashPage extends StatelessWidget {
 
     if (sessionState.isAuthenticated) {
       context.read<ShopListBloc>().add(FetchShopList());
+      context.read<InvitationBloc>().add(GetInvitation());
     }
 
     return MultiBlocListener(

@@ -13,14 +13,40 @@ class InvitationRepositoryImpl implements InvitationRepository {
   final InvitationRemoteDataSource remoteDataSource;
 
   @override
+  ResultFuture<Invitation?> getInvitation() async {
+    try {
+      final invitation = await remoteDataSource.getInvitation();
+      return Right(invitation);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
   ResultFuture<Invitation> createInvitation(
-    InvitationParams params,
+    CreateInvitationParams params,
   ) async {
     try {
       final invitation = await remoteDataSource.createInvitation(
         params,
       );
       return Right(invitation);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
+  VoidFuture updateInvitationStatus({
+    required String id,
+    required InvitationStatus status,
+  }) async {
+    try {
+      await remoteDataSource.updateInvitationStatus(
+        id: id,
+        status: status,
+      );
+      return const Right(unit);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
     }

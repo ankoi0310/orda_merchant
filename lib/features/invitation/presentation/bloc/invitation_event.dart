@@ -7,13 +7,22 @@ sealed class InvitationEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-final class GetInvitations extends InvitationEvent {}
+final class GetInvitation extends InvitationEvent {}
 
 final class CreateInvitation extends InvitationEvent {
   const CreateInvitation(this.params);
 
-  final InvitationParams params;
+  final CreateInvitationParams params;
 
   @override
   List<Object?> get props => [params];
+}
+
+final class AcceptInvitation extends InvitationEvent {
+  const AcceptInvitation(this.id);
+
+  final String id;
+
+  @override
+  List<Object?> get props => [id];
 }

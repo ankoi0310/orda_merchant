@@ -5,19 +5,19 @@ import 'package:orda_merchant/features/invitation/domain/repositories/invitation
 import 'package:orda_merchant/features/shop_member/domain/entities/shop_member.dart';
 
 class CreateInvitationUseCase
-    implements UseCase<Invitation, InvitationParams> {
+    implements UseCase<Invitation, CreateInvitationParams> {
   const CreateInvitationUseCase({required this.repository});
 
   final InvitationRepository repository;
 
   @override
-  ResultFuture<Invitation> call(InvitationParams params) async {
+  ResultFuture<Invitation> call(CreateInvitationParams params) async {
     return repository.createInvitation(params);
   }
 }
 
-class InvitationParams {
-  const InvitationParams({
+class CreateInvitationParams {
+  const CreateInvitationParams({
     required this.shopId,
     required this.email,
     required this.role,

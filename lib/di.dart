@@ -17,7 +17,9 @@ import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:orda_merchant/features/invitation/data/datasources/invitation_remote_data_source.dart';
 import 'package:orda_merchant/features/invitation/data/repositories/invitation_repository_impl.dart';
 import 'package:orda_merchant/features/invitation/domain/repositories/invitation_repository.dart';
+import 'package:orda_merchant/features/invitation/domain/usecases/accept_invitation_use_case.dart';
 import 'package:orda_merchant/features/invitation/domain/usecases/create_invitation_use_case.dart';
+import 'package:orda_merchant/features/invitation/domain/usecases/get_invitation_use_case.dart';
 import 'package:orda_merchant/features/invitation/presentation/bloc/invitation_bloc.dart';
 import 'package:orda_merchant/features/menu_category/data/datasources/menu_category_remote_data_source.dart';
 import 'package:orda_merchant/features/menu_category/data/repositories/menu_category_repository_impl.dart';
@@ -280,7 +282,19 @@ void _initInvitation(GetIt sl) {
       () => InvitationRepositoryImpl(remoteDataSource: sl()),
     )
     ..registerLazySingleton(
+      () => GetInvitationUseCase(repository: sl()),
+    )
+    ..registerLazySingleton(
       () => CreateInvitationUseCase(repository: sl()),
     )
-    ..registerFactory(() => InvitationBloc(createInvitation: sl()));
+    ..registerLazySingleton(
+      () => AcceptInvitationUseCase(repository: sl()),
+    )
+    ..registerFactory(
+      () => InvitationBloc(
+        getInvitation: sl(),
+        createInvitation: sl(),
+        acceptInvitation: sl(),
+      ),
+    );
 }
