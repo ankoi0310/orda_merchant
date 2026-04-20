@@ -20,6 +20,8 @@ abstract interface class SharedPrefsService {
 
   Future<void> clear();
 
+  bool keyExists(String key);
+
   Future<void> setObject(String key, JsonData value);
 
   Future<T?> getObject<T>(String key, T Function(JsonData) fromJson);
@@ -75,6 +77,11 @@ class SharedPrefsServiceImpl implements SharedPrefsService {
   @override
   Future<void> clear() async {
     await _prefs.clear();
+  }
+
+  @override
+  bool keyExists(String key) {
+    return _prefs.containsKey(key);
   }
 
   @override

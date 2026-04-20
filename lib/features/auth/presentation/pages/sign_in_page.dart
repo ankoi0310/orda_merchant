@@ -18,11 +18,6 @@ class SignInPage extends StatelessWidget {
         if (state is AuthError) {
           showSnackBar(context, content: state.message);
         }
-
-        if (state is AuthSuccess) {
-          context.go(AppRouter.dashboard);
-          showSnackBar(context, content: 'Đăng nhập thành công');
-        }
       },
       builder: (context, state) {
         return Scaffold(

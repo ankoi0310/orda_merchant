@@ -9,7 +9,7 @@ part 'session_state.dart';
 class SessionCubit extends Cubit<SessionState> {
   SessionCubit({required SupabaseClient supabaseClient})
     : _supabaseClient = supabaseClient,
-      super(const SessionState()) {
+      super(SessionInitial()) {
     _init();
   }
 
@@ -18,10 +18,10 @@ class SessionCubit extends Cubit<SessionState> {
   StreamSubscription<AuthState>? _sub;
 
   void _init() {
-    final currentUser = _supabaseClient.auth.currentUser;
+    final user = _supabaseClient.auth.currentUser;
 
-    if (currentUser != null) {
-      emit(state.copyWith(user: currentUser));
+    if (user != null) {
+      emit(Authenticated(user));
     }
 
     _sub = _supabaseClient.auth.onAuthStateChange.listen((
@@ -30,9 +30,9 @@ class SessionCubit extends Cubit<SessionState> {
       final session = data.session;
 
       if (session != null) {
-        emit(state.copyWith(user: session.user));
+        emit(Authenticated(session.user));
       } else {
-        emit(const SessionState());
+        emit(Unauthenticated());
       }
     });
   }

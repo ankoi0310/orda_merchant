@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:orda_merchant/core/bloc/user_setup/user_setup_cubit.dart';
 import 'package:orda_merchant/core/extensions/build_context_extension.dart';
-import 'package:orda_merchant/core/models/nav_item.dart';
 import 'package:orda_merchant/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:orda_merchant/features/dashboard/presentation/widgets/dashboard_actions_grid_view.dart';
 import 'package:orda_merchant/features/dashboard/presentation/widgets/dashboard_overview.dart';
 import 'package:orda_merchant/features/shop/domain/entities/shop.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
-import 'package:orda_merchant/features/shop/presentation/bloc/shop_list/shop_list_bloc.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final currentShop = context.watch<ShopBloc>().state.shop;
+    final userSetupState = context.watch<UserSetupCubit>().state;
+    final currentShop =
+        (userSetupState as UserSetupReady).selectedShop!;
     return Scaffold(
       appBar: AppBar(
         title: InkWell(
@@ -24,9 +24,9 @@ class DashboardPage extends StatelessWidget {
             await showModalBottomSheet<void>(
               context: context,
               shape: const RoundedRectangleBorder(
-                borderRadius: .directional(
-                  topStart: .circular(16),
-                  topEnd: .circular(16),
+                borderRadius: BorderRadiusDirectional.only(
+                  topStart: Radius.circular(16),
+                  topEnd: Radius.circular(16),
                 ),
               ),
               builder: (context) {
@@ -51,10 +51,10 @@ class DashboardPage extends StatelessWidget {
             ),
             child: Row(
               spacing: 8,
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  currentShop!.name,
+                  currentShop.name,
                   style: context.textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.colors.onSecondaryContainer,
@@ -74,10 +74,7 @@ class DashboardPage extends StatelessWidget {
         },
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
+          padding: const .symmetric(horizontal: 16, vertical: 16),
           children: const [
             DashboardOverview(),
             SizedBox(height: 32),
@@ -100,10 +97,12 @@ class DashboardPage extends StatelessWidget {
             context.read<ShopBloc>().add(CacheShop(shop));
           }
         },
-        child: BlocBuilder<ShopListBloc, ShopListState>(
-          buildWhen: (previous, current) => current is ShopListLoaded,
-          builder: (context, state) {
-            final shops = (state as ShopListLoaded).shops;
+        child: Builder(
+          builder: (context) {
+            final userSetupState = context
+                .watch<UserSetupCubit>()
+                .state;
+            final shops = (userSetupState as UserSetupReady).shops;
             return Padding(
               padding: const .symmetric(vertical: 16),
               child: Column(

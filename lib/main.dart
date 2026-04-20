@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:orda_merchant/app.dart';
 import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
+import 'package:orda_merchant/core/bloc/user_setup/user_setup_cubit.dart';
 import 'package:orda_merchant/core/constant/app_constants.dart';
 import 'package:orda_merchant/di.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/history_orders/history_orders_cubit.dart';
@@ -40,6 +41,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<SessionCubit>()),
+        BlocProvider(create: (_) => sl<UserSetupCubit>()),
         BlocProvider(create: (_) => sl<ShopListBloc>()),
         BlocProvider(
           create: (_) => sl<ShopBloc>()..add(GetCachedShop()),

@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SessionListenable extends ChangeNotifier {
-  SessionListenable(Stream<SessionState> stream) {
-    _subscription = stream.listen((_) {
-      notifyListeners();
-    });
+class BlocListenable<S> extends ChangeNotifier {
+  BlocListenable(BlocBase<S> cubit) : _cubit = cubit {
+    _subscription = cubit.stream.listen((_) => notifyListeners());
   }
 
-  late final StreamSubscription<SessionState> _subscription;
+  final BlocBase<S> _cubit;
+  late final StreamSubscription<S> _subscription;
+
+  S get state => _cubit.state;
 
   @override
   Future<void> dispose() async {
