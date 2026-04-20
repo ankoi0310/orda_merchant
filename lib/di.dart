@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
+import 'package:orda_merchant/core/bloc/user_setup/user_setup_cubit.dart';
 import 'package:orda_merchant/core/service/shared_prefs_service.dart';
 import 'package:orda_merchant/core/service/supabase_storage_service.dart';
 import 'package:orda_merchant/features/analytics/data/datasources/analytics_remote_data_source.dart';
@@ -57,6 +58,7 @@ import 'package:orda_merchant/features/shop/domain/usecases/cache_shop_use_case.
 import 'package:orda_merchant/features/shop/domain/usecases/get_cached_shop_use_case.dart';
 import 'package:orda_merchant/features/shop/domain/usecases/get_shop_list_use_case.dart';
 import 'package:orda_merchant/features/shop/domain/usecases/load_shop_use_case.dart';
+import 'package:orda_merchant/features/shop/domain/usecases/remove_cached_shop_use_case.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop_list/shop_list_bloc.dart';
 import 'package:orda_merchant/features/user/data/datasource/user_remote_data_source.dart';
@@ -82,7 +84,15 @@ Future<void> initInjection() async {
     ..registerLazySingleton<SharedPrefsService>(
       () => SharedPrefsServiceImpl(prefs),
     )
-    ..registerLazySingleton(() => SessionCubit(supabaseClient: sl()));
+    ..registerLazySingleton(() => SessionCubit(supabaseClient: sl()))
+    ..registerLazySingleton(
+      () => UserSetupCubit(
+        getShopList: sl(),
+        getCachedShop: sl(),
+        cacheShop: sl(),
+        removeCachedShop: sl(),
+      ),
+    );
 
   _initAuth(sl);
   _initUser(sl);
@@ -174,10 +184,14 @@ void _initShop(GetIt sl) {
     )
     ..registerLazySingleton(() => CacheShopUseCase(repository: sl()))
     ..registerLazySingleton(
+      () => RemoveCachedShopUseCase(repository: sl()),
+    )
+    ..registerLazySingleton(
       () => ShopBloc(
         loadShop: sl(),
         getCachedShop: sl(),
         cacheShop: sl(),
+        removeCachedShop: sl(),
       ),
     );
 }
