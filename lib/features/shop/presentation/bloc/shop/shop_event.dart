@@ -26,3 +26,5 @@ final class CacheShop extends ShopEvent {
   @override
   List<Object?> get props => [shop];
 }
+
+final class RemoveCachedShop extends ShopEvent {}

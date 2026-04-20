@@ -8,6 +8,8 @@ enum ShopStatus {
   updated,
   caching,
   cached,
+  removing,
+  removed,
   error,
 }
 
@@ -28,16 +30,18 @@ final class ShopState extends Equatable {
 
   bool get isCaching => status == ShopStatus.caching;
 
+  bool get isRemoving => status == ShopStatus.removing;
+
   bool get hasError => status == ShopStatus.error;
 
   ShopState copyWith({
-    Shop? shop,
     ShopStatus? status,
+    Shop? shop,
     String? error,
   }) {
     return ShopState(
-      shop: shop ?? this.shop,
       status: status ?? this.status,
+      shop: shop ?? this.shop,
       error: error,
     );
   }

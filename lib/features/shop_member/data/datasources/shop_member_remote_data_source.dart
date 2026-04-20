@@ -4,7 +4,7 @@ import 'package:orda_merchant/features/shop_member/data/models/shop_member_model
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class ShopMemberRemoteDataSource {
-  Future<List<ShopMemberModel>> getShopMemberList({String? shopId});
+  Future<List<ShopMemberModel>> getShopMemberList(String shopId);
 }
 
 class ShopMemberRemoteDataSourceImpl
@@ -14,17 +14,14 @@ class ShopMemberRemoteDataSourceImpl
   final SupabaseClient client;
 
   @override
-  Future<List<ShopMemberModel>> getShopMemberList({
-    String? shopId,
-  }) async {
+  Future<List<ShopMemberModel>> getShopMemberList(
+    String shopId,
+  ) async {
     try {
-      var query = client
+      final query = client
           .from('shop_members')
-          .select();
-
-      if (shopId != null) {
-        query = query.eq('shop_id', shopId);
-      }
+          .select()
+          .eq('shop_id', shopId);
 
       final shopMembers = await query
           .withConverter<List<ShopMemberModel>>(

@@ -1,5 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:orda_merchant/core/enum/shop_member_role.dart';
+
+enum ShopMemberRole {
+  owner('Chủ cửa hàng'),
+  manager('Quản lý'),
+  staff('Nhân viên');
+
+  const ShopMemberRole(this.label);
+
+  final String label;
+}
 
 class ShopMember extends Equatable {
   const ShopMember({

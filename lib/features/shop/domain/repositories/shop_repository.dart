@@ -6,4 +6,5 @@ abstract class ShopRepository {
   ResultFuture<Shop> getShop({String? shopId});
   ResultFuture<Shop?> getCachedShop();
   VoidFuture cacheShop(Shop shop);
+  VoidFuture removeCachedShop();
 }

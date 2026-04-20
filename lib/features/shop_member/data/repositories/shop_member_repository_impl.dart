@@ -12,12 +12,12 @@ class ShopMemberRepositoryImpl implements ShopMemberRepository {
   final ShopMemberRemoteDataSource remoteDataSource;
 
   @override
-  ResultFuture<List<ShopMember>> loadShopMemberList({
-    String? shopId,
-  }) async {
+  ResultFuture<List<ShopMember>> loadShopMemberList(
+    String shopId,
+  ) async {
     try {
       final shopMembers = await remoteDataSource.getShopMemberList(
-        shopId: shopId,
+        shopId,
       );
 
       return Right(shopMembers);
