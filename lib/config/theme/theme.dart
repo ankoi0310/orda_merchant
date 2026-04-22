@@ -91,7 +91,7 @@ class MaterialTheme {
       border: _border(color: colorScheme.outlineVariant),
       enabledBorder: _border(color: colorScheme.outlineVariant),
       focusedBorder: _border(
-        color: colorScheme.outlineVariant,
+        color: colorScheme.primary,
         borderWidth: 2,
       ),
       errorBorder: _border(color: colorScheme.onErrorContainer),

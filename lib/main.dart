@@ -7,6 +7,7 @@ import 'package:orda_merchant/core/bloc/session/session_cubit.dart';
 import 'package:orda_merchant/core/bloc/user_setup/user_setup_cubit.dart';
 import 'package:orda_merchant/core/constant/app_constants.dart';
 import 'package:orda_merchant/di.dart';
+import 'package:orda_merchant/features/invitation/presentation/bloc/invitation_bloc.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/history_orders/history_orders_cubit.dart';
 import 'package:orda_merchant/features/order/presentation/bloc/upcoming_orders/upcoming_orders_cubit.dart';
 import 'package:orda_merchant/features/shop/presentation/bloc/shop/shop_bloc.dart';
@@ -51,6 +52,7 @@ void main() async {
         ),
         BlocProvider(create: (_) => sl<UpcomingOrdersCubit>()),
         BlocProvider(create: (_) => sl<HistoryOrdersCubit>()),
+        BlocProvider(create: (_) => sl<InvitationBloc>()),
       ],
       child: const MyApp(),
     ),

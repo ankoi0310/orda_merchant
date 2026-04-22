@@ -5,7 +5,7 @@ import 'package:orda_merchant/features/invitation/domain/usecases/create_invitat
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class InvitationRemoteDataSource {
-  Future<InvitationModel?> getInvitation();
+  Future<InvitationModel?> getInvitation({InvitationStatus? status});
 
   Future<InvitationModel> createInvitation(
     CreateInvitationParams params,
@@ -24,16 +24,21 @@ class InvitationRemoteDataSourceImpl
   final SupabaseClient client;
 
   @override
-  Future<InvitationModel?> getInvitation() async {
+  Future<InvitationModel?> getInvitation({
+    InvitationStatus? status,
+  }) async {
     try {
-      final json = await client
-          .from('invitations')
-          .select()
-          .maybeSingle();
+      var query = client.from('invitations').select();
+
+      if (status != null) {
+        query = query.eq('status', status.name);
+      }
+
+      final json = await query.maybeSingle();
 
       return json == null ? null : InvitationModel.fromJson(json);
     } catch (e) {
-      throw const ServerException('Something wen wrong');
+      throw ServerException('Lấy lời mời không thành công: $e');
     }
   }
 
@@ -60,10 +65,10 @@ class InvitationRemoteDataSourceImpl
   }) async {
     final invitation = await _getInvitation(id);
 
-    await client.from('invitations').upsert({
-      'id': id,
-      'status': status.name,
-    });
+    await client
+        .from('invitations')
+        .update({'status': status.name})
+        .eq('id', id);
 
     if (status == InvitationStatus.accepted) {
       try {

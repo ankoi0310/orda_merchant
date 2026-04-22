@@ -14,6 +14,7 @@ import 'package:orda_merchant/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:orda_merchant/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:orda_merchant/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:orda_merchant/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:orda_merchant/features/invitation/presentation/bloc/invitation_bloc.dart';
 import 'package:orda_merchant/features/invitation/presentation/pages/invitation_page.dart';
 import 'package:orda_merchant/features/menu/presentation/pages/menu_page.dart';
 import 'package:orda_merchant/features/menu_category/presentation/bloc/menu_category/menu_category_bloc.dart';
@@ -70,6 +71,7 @@ class AppRouter {
     refreshListenable: Listenable.merge([
       BlocListenable(sl<SessionCubit>()),
       BlocListenable(sl<UserSetupCubit>()),
+      BlocListenable(sl<InvitationBloc>()),
     ]),
     routes: [
       ShellRoute(
@@ -258,6 +260,7 @@ class AppRouter {
     redirect: (context, state) {
       final session = context.read<SessionCubit>().state;
       final setup = context.read<UserSetupCubit>().state;
+      final invitationState = context.read<InvitationBloc>().state;
       final location = state.matchedLocation;
 
       /// Nếu chưa đăng nhập
@@ -269,6 +272,20 @@ class AppRouter {
       if (session is Authenticated) {
         if (setup is UserSetupInitial || setup is UserSetupLoading) {
           return location == splash ? null : splash;
+        }
+
+        if (setup is UserSetupHasInvitation) {
+          if (invitationState is AcceptInvitationSuccess) {
+            // Load the shop from invitation and complete setup
+            final invitation = setup.invitation;
+            context.read<UserSetupCubit>().completeInvitationSetup(
+              invitation,
+            );
+            return null; // Let next redirect cycle handle it
+          }
+          if (invitationState is! RejectInvitationSuccess) {
+            return location == invitation ? null : invitation;
+          }
         }
 
         if (setup is UserSetupNoShop) {

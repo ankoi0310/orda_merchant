@@ -11,8 +11,8 @@ final class InvitationInitial extends InvitationState {}
 
 final class GettingInvitation extends InvitationState {}
 
-final class GetInvitationsSuccess extends InvitationState {
-  const GetInvitationsSuccess(this.invitation);
+final class GetPendingInvitationsSuccess extends InvitationState {
+  const GetPendingInvitationsSuccess(this.invitation);
 
   final Invitation? invitation;
 
@@ -34,6 +34,8 @@ final class CreateInvitationSuccess extends InvitationState {
 final class AcceptingInvitation extends InvitationState {}
 
 final class AcceptInvitationSuccess extends InvitationState {}
+
+final class RejectInvitationSuccess extends InvitationState {}
 
 final class InvitationError extends InvitationState {
   const InvitationError(this.message);

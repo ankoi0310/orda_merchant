@@ -19,9 +19,9 @@ class InvitationModel extends Invitation {
       shopId: json['shop_id'] as String,
       email: json['email'] as String,
       role: _parseRole(json['role'] as String),
-      invitedBy: json['invitedBy'] as String,
+      invitedBy: json['invited_by'] as String,
       status: _parseStatus(json['status'] as String),
-      createdAt: json['createdAt'] as DateTime,
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
 

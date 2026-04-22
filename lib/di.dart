@@ -20,7 +20,8 @@ import 'package:orda_merchant/features/invitation/data/repositories/invitation_r
 import 'package:orda_merchant/features/invitation/domain/repositories/invitation_repository.dart';
 import 'package:orda_merchant/features/invitation/domain/usecases/accept_invitation_use_case.dart';
 import 'package:orda_merchant/features/invitation/domain/usecases/create_invitation_use_case.dart';
-import 'package:orda_merchant/features/invitation/domain/usecases/get_invitation_use_case.dart';
+import 'package:orda_merchant/features/invitation/domain/usecases/get_pending_invitation_use_case.dart';
+import 'package:orda_merchant/features/invitation/domain/usecases/reject_invitation_use_case.dart';
 import 'package:orda_merchant/features/invitation/presentation/bloc/invitation_bloc.dart';
 import 'package:orda_merchant/features/menu_category/data/datasources/menu_category_remote_data_source.dart';
 import 'package:orda_merchant/features/menu_category/data/repositories/menu_category_repository_impl.dart';
@@ -91,6 +92,8 @@ Future<void> initInjection() async {
         getCachedShop: sl(),
         cacheShop: sl(),
         removeCachedShop: sl(),
+        getPendingInvitation: sl(),
+        loadShop: sl(),
       ),
     );
 
@@ -296,7 +299,7 @@ void _initInvitation(GetIt sl) {
       () => InvitationRepositoryImpl(remoteDataSource: sl()),
     )
     ..registerLazySingleton(
-      () => GetInvitationUseCase(repository: sl()),
+      () => GetPendingInvitationUseCase(repository: sl()),
     )
     ..registerLazySingleton(
       () => CreateInvitationUseCase(repository: sl()),
@@ -304,11 +307,15 @@ void _initInvitation(GetIt sl) {
     ..registerLazySingleton(
       () => AcceptInvitationUseCase(repository: sl()),
     )
+    ..registerLazySingleton(
+      () => RejectInvitationUseCase(repository: sl()),
+    )
     ..registerFactory(
       () => InvitationBloc(
-        getInvitation: sl(),
+        getPendingInvitation: sl(),
         createInvitation: sl(),
         acceptInvitation: sl(),
+        rejectInvitation: sl(),
       ),
     );
 }

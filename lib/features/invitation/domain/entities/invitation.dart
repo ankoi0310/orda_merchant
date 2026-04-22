@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:orda_merchant/features/shop_member/domain/entities/shop_member.dart';
 
-enum InvitationStatus { pending, accepted }
+enum InvitationStatus { pending, accepted, rejected }
 
 class Invitation extends Equatable {
   const Invitation({

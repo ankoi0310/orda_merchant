@@ -26,3 +26,12 @@ final class AcceptInvitation extends InvitationEvent {
   @override
   List<Object?> get props => [id];
 }
+
+final class RejectInvitation extends InvitationEvent {
+  const RejectInvitation(this.id);
+
+  final String id;
+
+  @override
+  List<Object?> get props => [id];
+}

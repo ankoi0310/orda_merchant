@@ -11,8 +11,16 @@ final class UserSetupInitial extends UserSetupState {}
 
 final class UserSetupLoading extends UserSetupState {}
 
-final class UserSetupNoShop
-    extends UserSetupState {} // → trang đăng ký
+final class UserSetupNoShop extends UserSetupState {}
+
+final class UserSetupHasInvitation extends UserSetupState {
+  const UserSetupHasInvitation(this.invitation);
+
+  final Invitation invitation;
+
+  @override
+  List<Object?> get props => [invitation];
+}
 
 final class UserSetupReady extends UserSetupState {
   const UserSetupReady({
